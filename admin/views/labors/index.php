@@ -2,7 +2,10 @@
 
 require_once __DIR__ . '/LaborsApplication.php';
 $lbModel = new LaborsApplication();
-
+if(isset($_GET['lid'])){
+    require_once __DIR__.'/view.php';
+    exit;
+}
 ?>
 <h1>Laborers List</h1>
 
@@ -35,13 +38,13 @@ $lbModel = new LaborsApplication();
             ?>
             <tr>
                 <td><?= $no ?></td>
-                <td><img src="/labor-register/<?= htmlspecialchars($laborer['picture']) ?>" alt="Picture" width="50"></td>
+                <td><img src="/labor_application/<?= htmlspecialchars($laborer['picture']) ?>" alt="Picture" width="50"></td>
                 <td><?= htmlspecialchars($laborer['name']) ?></td>
                 <td><?= htmlspecialchars($laborer['serial_number']) ?></td>
                 <td><?= htmlspecialchars($laborer['status']) ?></td>
                 <td><?= htmlspecialchars($laborer['registration_date']) ?></td>
                 <td class="actions">
-                    <a href="view_labor.php?id=<?= $laborer['id'] ?>">View</a>
+                    <a href="?vr=labors&lid=<?= $laborer['id'] ?>">View</a>
                     <a href="actions/delete_labor.php?id=<?= $laborer['id'] ?>"
                         onclick="return confirm('Are you sure you want to delete this labor?')">Delete</a>
                 </td>

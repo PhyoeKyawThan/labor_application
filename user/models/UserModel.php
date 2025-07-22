@@ -31,15 +31,18 @@ class UserModel extends Connection
     public function login()
     {
         try {
-            $query = "SELECT * FROM users WHERE email = ? AND password = ?";
+            $query = "SELECT * FROM users WHERE email = ?";
             $stmt = parent::$connection->prepare($query);
-            $types = parent::get_types($this->table_datas);
-            $stmt->bind_param($types, ...$this->table_datas);
-            if ($stmt->execute()) {
+            $types = parent::get_types($this->table_datas['email']);
+            $stmt->bind_param('s', $this->table_datas['email']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $mail_user = $result->fetch_assoc();
+            if ($mail_user && password_verify($this->table_datas['password'], $mail_user['password'])) {
                 return [
                     'success' => true,
                     'msg' => 'Login Success',
-                    'user' => $stmt->get_result()->fetch_assoc()
+                    'user' => $mail_user
                 ];
             }
             return [
@@ -58,4 +61,5 @@ class UserModel extends Connection
         $qry = parent::$connection->query($query);
         return $qry->fetch_assoc();
     }
+    
 }

@@ -22,7 +22,7 @@ function burmeseNumberConverter($number)
 }
 function upload_multiples()
 {
-    $uploadDir = __DIR__ . '/static/uploads/';
+    $uploadDir = __DIR__ . '/../../static/uploads/';
     $returnPaths = [];
 
     if (!is_dir($uploadDir)) {

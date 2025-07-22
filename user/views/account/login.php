@@ -50,9 +50,33 @@
         margin: 10px auto;
     }
 </style>
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $user = new UserModel();
+    $user->table_datas = [
+        'email' => trim($_POST['email']),
+        'password' => trim($_POST['password']),
+    ];
+    $login = $user->login();
+    if ($login['success'] ?? null) {
+        $_SESSION['user_id'] = $login['user']['id'];
+        $_SESSION['username'] = $login['user']['username'];
+        $_SESSION['email'] = $login['user']['email'];
+        $_SESSION['type'] = $login['user']['type'];
+        $msg = "Account Created";
+        header("Location: /labor_application/user/?vr=account&msg=Account Created!");
+        exit;
+    }
+
+    if (!$login['success'] ?? null) {
+        $err = "Incorrect email or password!";
+    }
+}
+?>
 <div class="auth-container">
     <h2>Login</h2>
-    <form action="login.php" method="post">
+    <?= $err ?? '' ?>
+    <form action="" method="post">
         <input type="email" name="email" placeholder="Email" required />
         <input type="password" name="password" placeholder="Password" required />
         <button type="submit">Login</button>

@@ -1,8 +1,11 @@
 <?php
 session_start();
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     require_once __DIR__ . '/../models/ApplicationModel.php';
+    require_once __DIR__.'/helper.php';
 
     $appModel = new ApplicationModel();
     $connection = $appModel->get_connection(); 
@@ -23,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $edu_level = $_POST['edu_level'];
     $stable_address = $_POST['stable_address'];
 
-    $upload_dir = __DIR__ . '/../static/uploads/';
+    $upload_dir = __DIR__ . '/../../static/uploads/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true);
     }
