@@ -3,10 +3,15 @@ require_once __DIR__ . '/../Config.php';
 
 class Connection extends Config
 {
-    private static $connection = null;
+    public static $connection = null;
     public function __construct()
     {
-        self::$connection = mysqli_connect(self::HOST, self::USERNAME, self::PASSWORD, self::DB_NAME);
+        self::$connection = mysqli_connect(
+            self::HOST,
+            self::USERNAME,
+            self::PASSWORD,
+            self::DB_NAME
+        );
         if (!self::$connection) {
             throw new Exception("Error connecting to database");
         }

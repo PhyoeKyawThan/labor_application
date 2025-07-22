@@ -4,8 +4,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-define('BASE_VIEW_PATH', __DIR__ . '/views');
+require_once __DIR__.'/models/UserModel.php';
+require_once __DIR__.'/models/ApplicationModel.php';
 
+define('BASE_VIEW_PATH', __DIR__ . '/views');
+$current_path = $_SERVER['REQUEST_URI'];
 $view = isset($_GET['vr']) ? $_GET['vr'] : 'home';
 
 $views = ['home', 'applications', 'about', 'contact', 'account'];

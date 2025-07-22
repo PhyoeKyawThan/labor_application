@@ -4,15 +4,11 @@ class ApplicationModel extends Connection
 {
     private $table_name = "applications";
     public $table_datas = null;
-    private $connection = null;
-    public function __construct()
-    {
-        $this->connection = parent::get_connection();
-    }
+    public $application_id = 0;
 
     public function addApplication()
     {
-        $stmt = $this->connection->prepare("INSERT INTO $this->table_name(
+        $stmt = parent::$connection->prepare("INSERT INTO $this->table_name(
                 name, 
                 nrc, 
                 serial_number, 
@@ -33,7 +29,7 @@ class ApplicationModel extends Connection
 
     public function getApplication($user_id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM $this->table_name WHERE user_id = ?");
+        $stmt = parent::$connection->prepare("SELECT * FROM $this->table_name WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -42,7 +38,7 @@ class ApplicationModel extends Connection
 
     public function updateApplication()
     {
-        $stmt = $this->connection->prepare(
+        $stmt = parent::$connection->prepare(
             "UPDATE $this->table_name SET 
             name = ?, 
             nrc = ?, 
@@ -64,6 +60,5 @@ class ApplicationModel extends Connection
         $stmt->bind_param($types, ...$this->table_datas);
         return $stmt->execute();
     }
-
 }
 ?>

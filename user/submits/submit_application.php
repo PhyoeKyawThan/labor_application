@@ -3,8 +3,6 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     require_once __DIR__ . '/../models/ApplicationModel.php';
-    require_once __DIR__ . '/../helpers/serial_number_generator.php';
-    require_once __DIR__ . '/../helpers/upload_multiples.php';
 
     $appModel = new ApplicationModel();
     $connection = $appModel->get_connection(); 
@@ -78,13 +76,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $user_id
         ];
         if ($appModel->addApplication()) {
-            header("Location: labour_application.php?msg=Register Success");
+            header("Location: /labor_application/user/?vr=applications&msg=Register Success");
             exit;
         } else {
             die("Failed to save application.");
         }
     } else {
-        header("Location: labour_application.php?msg=Already Registered");
+        header("Location: /labor_application/user/?vr=application&msg=Already Registered");
         exit;
     }
 }
