@@ -1,5 +1,17 @@
 <?php
 require_once __DIR__ . '/helpers/drop_datas.php';
+if(!isset($_SESSION['user_id'])){
+    header("Location: ".BASE_URL."?vr=applications");
+    exit;
+}
+$userModel = new UserModel();
+$userModel->user_id = $_SESSION['user_id'];
+$reject_app = $userModel->get_registered_application();
+if($reject_app['status'] != 'Rejected'){
+    header("Location: ".BASE_URL."?vr=applications");
+    exit;
+}
+
 ?>
 <style>
     main h1 {
@@ -219,7 +231,7 @@ require_once __DIR__ . '/helpers/drop_datas.php';
             <div style="grid-column: span 2; display: flex; gap: 20px; align-items: center;">
                 <div style="flex: 1;">
                     <label for="pic">
-                    <img id="preview" src="/labor-register/static/images/photo_2025-06-07_23-25-37.jpg"
+                    <img id="preview" src="/labor_application/<?= $reject_app['picture'] ?>"
                         alt="Image Preview"
                         style="width: 200px; height: 200px; border: 1px solid #ccc; padding: 5px; object-fit: cover;">
                     </label>
@@ -232,7 +244,7 @@ require_once __DIR__ . '/helpers/drop_datas.php';
 
             <div>
                 <label for="name">အမည် (Name):</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" value="<?= $reject_app['name'] ?>" required>
             </div>
 
             <div>

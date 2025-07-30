@@ -309,14 +309,20 @@ require_once __DIR__ . '/helpers/drop_datas.php';
         </div>
         <div class="attachments">
             <div class="attachment">
-                <label for="file1">မှတ်ပုံတင်</label>
-                <input type="file" id="file1" name="images[0]" accept="image/*" data-att="Nrc"
-                    aria-describedby="desc1" />
+                <label for="file1">မှတ်ပုံတင် (Front)</label>
+                <input type="file" id="file1" name="nrc[0]" accept="image/*" data-att="Nrc"
+                    aria-describedby="desc1" multiple />
+                <img id="preview1" class="preview" alt="Preview of Image File 1" />
+            </div>
+            <div class="attachment">
+                <label for="file1">မှတ်ပုံတင် (Back)</label>
+                <input type="file" id="file1" name="nrc[1]" accept="image/*" data-att="Nrc"
+                    aria-describedby="desc1" multiple />
                 <img id="preview1" class="preview" alt="Preview of Image File 1" />
             </div>
             <div class="attachment">
                 <label for="file2">Certificate</label>
-                <input type="file" id="file2" name="images[1]" accept="image/*" data-att="Certificate"
+                <input type="file" id="file2" name="certificate" accept="image/*" data-att="Certificate"
                     aria-describedby="desc2" />
                 <img id="preview2" class="preview" alt="Preview of Image File 2" />
             </div>

@@ -21,7 +21,8 @@ class ApplicationModel extends Connection
                 edu_level,  
                 stable_address, 
                 picture, 
-                images, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?)");
+                images, 
+                user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $types = parent::get_types(array_values($this->table_datas));
         $stmt->bind_param($types, ...$this->table_datas);
         return $stmt->execute();

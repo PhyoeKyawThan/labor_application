@@ -1,11 +1,15 @@
 <main>
     <?php
-        if(isset($_GET['ee'])){
-            require 'employee_form.php';
-        }else if(isset($_GET['er'])){
-            require 'employer_form.php';
-        }else{
-            require 'details.php';
-        }
+    require_once __DIR__ . '/../../models/UserModel.php';
+
+    if (isset($_GET['ee'])) {
+        require 'employee_form.php';
+    } else if (isset($_GET['er'])) {
+        require 'employer_form.php';
+    } else if (isset($_GET['rj'])) {
+        require 'employee_rejected.php';
+    } else {
+        require 'details.php';
+    }
     ?>
 </main>

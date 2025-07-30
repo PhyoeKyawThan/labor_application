@@ -51,6 +51,7 @@
     }
 </style>
 <?php
+$msg = $_GET['msg'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = new UserModel();
     $user->table_datas = [
@@ -63,8 +64,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['username'] = $login['user']['username'];
         $_SESSION['email'] = $login['user']['email'];
         $_SESSION['type'] = $login['user']['type'];
-        $msg = "Account Created";
-        header("Location: /labor_application/user/?vr=account&msg=Account Created!");
+        $user->user_id = $_SESSION['user_id'];
+        if (isset($user->get_registered_application()['id'])) {
+            $_SESSION['applied'] = true;
+        }else{
+            $_SESSION['applied'] = false;
+        }
+        
+
+        header("Location: /labor_application/user/?vr=account&msg=Login Success!");
         exit;
     }
 
@@ -74,8 +82,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <div class="auth-container">
-    <h2>Login</h2>
+    <h2>Welcome Back, Login Here</h2>
     <?= $err ?? '' ?>
+    <b style="display: block; 
+    text-align: center; 
+    margin: 8px 0;
+    background-color: #1d72b88e; 
+    color: white; 
+    border-radius: 8px;
+    ">
+    <?= $msg ?? '' ?></b>
     <form action="" method="post">
         <input type="email" name="email" placeholder="Email" required />
         <input type="password" name="password" placeholder="Password" required />

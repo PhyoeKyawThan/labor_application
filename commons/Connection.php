@@ -3,6 +3,10 @@ require_once __DIR__ . '/../Config.php';
 
 class Connection extends Config
 {
+    /**
+     * Summary of connection
+     * @var mysqli $connection 
+     */
     public static $connection = null;
     public function __construct()
     {

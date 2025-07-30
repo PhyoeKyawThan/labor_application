@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../commons/Connection.php';
 class UserModel extends Connection
 {
     private $table_name = "users";
+    public $user_id = 0;
     public $table_datas = null;
     public function register()
     {
@@ -61,5 +62,31 @@ class UserModel extends Connection
         $qry = parent::$connection->query($query);
         return $qry->fetch_assoc();
     }
-    
+
+    public function get_registered_application()
+    {
+        try {
+            $query = parent::$connection->prepare("SELECT * FROM applications WHERE user_id = ?");
+            $query->bind_param('i', $this->user_id);
+            mysqli_execute($query);
+            $result = $query->get_result();
+            $application = $result->fetch_assoc();
+            return $application;
+        } catch (Exception $e) {
+            die("Error while getting user's registered application");
+        }
+    }
+
+    public function get_registered_status(){
+        try {
+            $query = parent::$connection->prepare("SELECT status FROM applications WHERE user_id = ?");
+            $query->bind_param('i', $this->user_id);
+            mysqli_execute($query);
+            $result = $query->get_result();
+            $application = $result->fetch_assoc();
+            return $application;
+        } catch (Exception $e) {
+            die("Error while getting user's registered application");
+        }
+    }
 }

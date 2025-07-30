@@ -6,6 +6,24 @@ if (!$id) {
 }
 
 $model = new LaborsApplication();
+$msg = null;
+$err = null;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $status = $_POST['status'];
+    $message = $_POST['message'];
+    $model->table_datas = [
+        $status,
+        $message,
+        $id
+    ];
+    if ($model->updateStatus()) {
+        $msg = "Update Success";
+    } else {
+        $err = "Something went wrong";
+    }
+}
+
+
 $laborer = $model->getApplicationById($id);
 
 if (!$laborer) {
@@ -44,9 +62,23 @@ if (!empty($laborer['images'])) {
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
         gap: 1.5rem;
+    }
+
+
+    form>div {
+        flex: 1 1 calc(50% - 0.75rem);
+        min-width: 280px;
+        box-sizing: border-box;
+    }
+
+
+    form>div.full-width {
+        flex: 1 1 100%;
     }
 
     label {
@@ -79,7 +111,7 @@ if (!empty($laborer['images'])) {
     }
 
     input[type="submit"] {
-        grid-column: 1 / -1;
+        width: 100%;
         background-color: #2563eb;
         color: #fff;
         font-weight: 600;
@@ -96,17 +128,17 @@ if (!empty($laborer['images'])) {
     }
 
     .image-upload {
-        grid-column: 1 / -1;
+        width: 100%;
         display: flex;
         gap: 1rem;
-        justify-content: start;
+        justify-content: space-between;
         flex-wrap: wrap;
         padding: 1rem 0;
     }
 
     .image-preview {
-        width: 120px;
-        height: 120px;
+        width: 300px;
+        height: 300px;
         object-fit: cover;
         border-radius: 0.5rem;
         border: 1px solid #d1d5db;
@@ -121,9 +153,18 @@ if (!empty($laborer['images'])) {
     textarea {
         resize: vertical;
     }
+
+
+    @media (max-width: 768px) {
+        form>div {
+            flex: 1 1 100%;
+        }
+    }
 </style>
 
 <h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
+<div><?= $msg ?? '' ?></div>
+<div><?= $err ?? '' ?> </div>
 <form action="" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="id" value="<?= (int) $laborer['id'] ?>" id="id">
 
@@ -135,9 +176,10 @@ if (!empty($laborer['images'])) {
         <label for="nrc">NRC</label>
         <input type="text" id="nrc" name="nrc" value="<?= htmlspecialchars($laborer['nrc']) ?>" required>
     </div>
-     <div>
+    <div>
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" value="<?= htmlspecialchars($laborer['email']) ?>" disabled required>
+        <input type="email" id="email" name="email" value="<?= htmlspecialchars($laborer['email']) ?>" disabled
+            required>
     </div>
     <div>
         <label for="township">Township</label>
@@ -175,27 +217,36 @@ if (!empty($laborer['images'])) {
             required>
     </div>
 
-    
-
     <div>
         <label for="stable_address">Stable Address</label>
         <input type="text" id="stable_address" name="stable_address"
             value="<?= htmlspecialchars($laborer['stable_address']) ?>" required>
     </div>
-  
+
     <input type="number" id="user_id" name="user_id" value="<?= (int) $laborer['user_id'] ?>" required hidden>
 
-
-    <div class="image-upload">
-        <?php
-        $i = 0;
-        foreach ($images as $image): ?>
-            <label class="image-label" for="image<?= $i ?>"></label>
-            <img id="preview<?= $i ?>" src="/labor_application/<?= htmlspecialchars($image) ?>"
-                alt="Image Preview <?= $i + 1 ?>" class="image-preview" onclick="ViewImage(this.src)">
-            <?php $i += 1; endforeach; ?>
+    <div class="image-upload full-width">
+        <div>
+            <label for="">NRC</label>
+            <?php
+            $i = 0;
+            $nrc_images = is_string($images['nrc']) ? json_decode($images['nrc'], true) : $images['nrc'];
+            if (is_array($nrc_images)):
+                foreach ($nrc_images as $image): ?>
+                    <label class="image-label" for="image<?= $i ?>"><?= $i == 0 ? "Front" : "Back" ?></label>
+                    <img id="preview<?= $i ?>" src="/labor_application/<?= htmlspecialchars($image) ?>"
+                        alt="Image Preview <?= $i + 1 ?>" class="image-preview" onclick="ViewImage(this.src)">
+                    <?php $i += 1;
+                endforeach;
+            endif; ?>
+        </div>
+        <div>
+            <label for="">Certificate</label>
+            <img id="preview-certificate" src="/labor_application/<?= htmlspecialchars($images['certificate']) ?>"
+                alt="Image Preview" class="image-preview" onclick="ViewImage(this.src)">
+        </div>
     </div>
-    <div>
+    <div class="full-width">
         <label for="status">Status</label>
         <select id="status" name="status" required>
             <option value="Approved" <?= $laborer['status'] === 'Approved' ? 'selected' : '' ?>>Approved</option>
@@ -203,19 +254,19 @@ if (!empty($laborer['images'])) {
             <option value="Rejected" <?= $laborer['status'] === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
         </select>
     </div>
-    <div>
+    <div class="full-width">
         <label for="message">Message for registerer</label>
-        <textarea name="message" rows="5" id="message"><?= $laborer['message'] ?></textarea>
-
+        <textarea name="message" rows="5" id="message"><?= htmlspecialchars($laborer['message'] ?? '') ?></textarea>
     </div>
     <input type="submit" value="Submit">
 </form>
 <script>
-    document.querySelectorAll('input[type=text], button, input[type=date]').forEach(elem => {
-        elem.disabled = true;
+    document.querySelectorAll('input[type=text], input[type=date], input[type=email], select:not(#status), textarea').forEach(elem => {
+        if (elem.id !== 'message') {
+            elem.disabled = true;
+        }
     });
 
-    // image view
     function ViewImage(src) {
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -228,6 +279,7 @@ if (!empty($laborer['images'])) {
         overlay.style.justifyContent = 'center';
         overlay.style.alignItems = 'center';
         overlay.style.zIndex = '9999';
+        overlay.style.cursor = 'zoom-out';
 
         const fullImage = document.createElement('img');
         fullImage.src = src;
@@ -239,7 +291,7 @@ if (!empty($laborer['images'])) {
 
         overlay.appendChild(fullImage);
 
-        // Close on click
+
         overlay.addEventListener('click', function () {
             document.body.removeChild(overlay);
         });

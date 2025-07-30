@@ -20,7 +20,8 @@
         margin-bottom: 1.5rem;
     }
 
-    #types a {
+    #types a,
+    #container a {
         display: inline-block;
         padding: 0.6rem 1.4rem;
         margin: 0 0.5rem;
@@ -41,21 +42,73 @@
         font-size: 0.95rem;
         line-height: 1.6;
     }
+
+    .rejected {
+        background-color: #e74c3c !important;
+        /* Red for rejected */
+        color: #fff !important;
+        cursor: pointer;
+        /* Indicate it's clickable if there's a link */
+    }
+
+    .rejected:hover {
+        background-color: #c0392b !important;
+    }
+
+    .pending {
+        background-color: #f39c12 !important;
+        /* Orange/Yellow for pending */
+        color: #fff !important;
+        cursor: default;
+        /* Indicate it's not clickable for pending */
+    }
+
+    .pending:hover {
+        background-color: #e67e22 !important;
+    }
+
+    .success {
+        background-color: #2ecc71 !important;
+        /* Green for success */
+        color: #fff !important;
+        cursor: default;
+        /* Indicate it's not clickable for success */
+    }
+
+    .success:hover {
+        background-color: #27ae60 !important;
+    }
 </style>
 
 <div id="container">
     <h1>Application</h1>
     <div id="types">
         <?php
-        if ($_SESSION['type'] ?? null) {
-            if ($_SESSION['type'] == 'employee'):
-                echo '<a href="?vr=applications&ee">Application For Employee card</a>';
-            else:
-                echo '<a href="?vr=applications&er">Employer</a>';
-            endif;
+        if (isset($_SESSION['applied']) && !$_SESSION['applied']) {
+            if ($_SESSION['type'] ?? null && isset($_SESSION['user_id'])) {
+                if ($_SESSION['type'] == 'employee'):
+                    echo '<a href="?vr=applications&ee">Application For Employee card</a>';
+                else:
+                    echo '<a href="?vr=applications&er">Employer</a>';
+                endif;
+            }
         }
         ?>
     </div>
+    <?php
+    if (!isset($_SESSION['user_id'])):
+        ?>
+        <a href="<?= BASE_URL ?>/?vr=account&auth=login&msg=You must create an account to Continue">Make An Application</a>
+        <?php
+    else:
+        $userModel = new UserModel();
+        $userModel->user_id = (int) $_SESSION['user_id'];
+        $status = $userModel->get_registered_status()['status'] ?? null;
+        if ($status):
+            ?>
+            <a href="<?= $status == 'Rejected' ? '?vr=applications&rj=' : '' ?>" class="<?= $status == 'Rejected' ? 'rejected' :
+                        ($status == 'Pending' ? 'pending' : 'success') ?>">Your application Status: <?= $status ?></a>
+        <?php endif; endif; ?>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit quos illum, accusantium rerum in possimus
         laborum! Mollitia a eius laudantium nulla odio quae cupiditate, nam suscipit aliquid deserunt facere fugiat.</p>
 </div>

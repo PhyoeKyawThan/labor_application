@@ -4,6 +4,7 @@
             $_GET['auth'] == 'signup' ? require_once __DIR__.'/signup.php' : require_once __DIR__.'/login.php';
             exit;
         }
+        
         if(!isset($_SESSION['user_id'])){
             header("Location: $current_path&auth=login");
             exit;
@@ -11,7 +12,7 @@
         $model = new ApplicationModel();
         $application = $model->getApplication($_SESSION['user_id']);
     ?>
-
+ 
     <style>
         * {
             box-sizing: border-box;
@@ -22,6 +23,8 @@
             padding: 40px 20px;
             background: #f8fafc;
             min-height: 100vh;
+            /* margin-bottom: 100px; */
+            overflow: auto;
         }
 
         .card {
@@ -91,6 +94,7 @@
     </style>
 
     <div class="card" id="account-details">
+        <a href="<?= BASE_URL ?>/views/account/logout.php">Logout</a>
         <h1>Account Details</h1>
         <div>Name: <b><?= $_SESSION['username'] ?></b></div>
         <div>Email: <b><?= $_SESSION['email'] ?></b></div>
