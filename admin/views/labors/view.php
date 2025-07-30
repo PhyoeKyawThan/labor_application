@@ -42,12 +42,12 @@ if (!empty($laborer['images'])) {
 
 ?>
 <style>
-    body {
+    /* body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #f8fafc;
         margin: 0;
         padding: 2rem;
-    }
+    } */
 
     h1 {
         text-align: center;

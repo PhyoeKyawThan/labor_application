@@ -29,18 +29,21 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
-            min-height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
         }
 
         nav {
+
             background-color: var(--sidebar-bg);
             width: 220px;
-            min-height: 100vh;
+            max-height: 100vh;
             padding: 2rem 1.5rem;
             box-shadow: 2px 0 8px var(--shadow-color);
             border-radius: 0 12px 12px 0;
-            position: sticky;
-            top: 0;
+            /* position: sticky; */
+            /* top: 0; */
+            overflow: auto;
             display: flex;
             flex-direction: column;
         }
@@ -85,6 +88,8 @@
         main {
             flex: 1;
             padding: 2rem;
+            max-height: 100vh;
+            overflow: auto;
         }
 
         /* Responsive adjustments */
