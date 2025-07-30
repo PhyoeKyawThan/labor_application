@@ -103,12 +103,16 @@
     else:
         $userModel = new UserModel();
         $userModel->user_id = (int) $_SESSION['user_id'];
-        $status = $userModel->get_registered_status()['status'] ?? null;
-        if ($status):
-            ?>
-            <a href="<?= $status == 'Rejected' ? '?vr=applications&rj=' : '' ?>" class="<?= $status == 'Rejected' ? 'rejected' :
-                        ($status == 'Pending' ? 'pending' : 'success') ?>">Your application Status: <?= $status ?></a>
-        <?php endif; endif; ?>
+        $status = $userModel->get_registered_status();
+        if ($status['status'] ?? null):
+            $s = $status['status'];
+            if (!$status['is_resubmit']):
+                ?>
+                <a href="<?= $s == 'Rejected' ? '?vr=applications&rj=' : '' ?>" class="<?= $s == 'Rejected' ? 'rejected' :
+                            ($s == 'Pending' ? 'pending' : 'success') ?>">Your application Status: <?= $s ?></a>
+            <?php else: ?>
+                <p class="pending">Your Resubmitted Application is checking underway..</p>
+            <?php endif; endif; endif; ?>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit quos illum, accusantium rerum in possimus
         laborum! Mollitia a eius laudantium nulla odio quae cupiditate, nam suscipit aliquid deserunt facere fugiat.</p>
 </div>

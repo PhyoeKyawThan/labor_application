@@ -38,28 +38,27 @@ class ApplicationModel extends Connection
     }
 
     public function updateApplication()
-    {
-        $stmt = parent::$connection->prepare(
-            "UPDATE $this->table_name SET 
-            name = ?, 
-            nrc = ?, 
-            serial_number = ?, 
-            township = ?, 
-            phone = ?, 
-            email = ?, 
-            birth_date = ?, 
-            gender = ?, 
-            religion = ?, 
-            edu_level = ?, 
-            stable_address = ?, 
-            picture = ?, 
-            images = ?
-        WHERE user_id = ?"
-        );
+{
+    $set = [];
+    $params = [];
+    $types = '';
 
-        $types = parent::get_types(array_values($this->table_datas));
-        $stmt->bind_param($types, ...$this->table_datas);
-        return $stmt->execute();
+    foreach ($this->table_datas as $key => $value) {
+        if ($key !== 'user_id') {
+            $set[] = "$key = ?";
+            $params[] = $value;
+            $types .= parent::resolve_type($value); 
+        }
     }
+
+    $params[] = $this->table_datas['user_id'];
+    $types .= 'i';
+
+    $qry = "UPDATE {$this->table_name} SET " . implode(', ', $set) . " WHERE user_id = ?";
+    $stmt = parent::$connection->prepare($qry);
+    $stmt->bind_param($types, ...$params);
+    return $stmt->execute();
+}
+
 }
 ?>

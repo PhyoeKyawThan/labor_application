@@ -222,10 +222,9 @@ $images = json_decode($reject_app['images']);
         }
     }
 </style>
-<!-- <script src=""></script> -->
 <main>
     <h1>မြန်မာအလုပ်သမား စာရင်းသွင်းခြင်း</h1>
-    <form action="<?= BASE_URL ?>/submits/submit_application.php" method="POST" id="reg-form"
+    <form action="<?= BASE_URL ?>/submits/submit_rejected_application.php" method="POST" id="reg-form"
         enctype="multipart/form-data" onsubmit="return validateForm()">
         <div class="container">
             <div style="grid-column: span 2; display: flex; gap: 20px; align-items: center;">
@@ -344,7 +343,7 @@ $images = json_decode($reject_app['images']);
             </div>
             <div class="attachment">
                 <label for="file3">Certificate</label>
-                <input type="file" id="file3" name="images[1]" accept="image/*" data-att="Certificate"
+                <input type="file" id="file3" name="certificate" accept="image/*" data-att="Certificate"
                     aria-describedby="desc3" />
                 <img id="preview3" class="preview" src="<?= '/labor_application/'.$images->certificate ?>" alt="Preview of Image File 3" />
             </div>
@@ -386,14 +385,14 @@ $images = json_decode($reject_app['images']);
             }
         });
 
-        if (attachments.length > 0) {
-            let msg = "Please provide the following attachments:\n";
-            attachments.forEach(att => {
-                msg += att.dataset.att + "\n";
-            });
-            alert(msg);
-            return false;
-        }
+        // if (attachments.length > 0) {
+        //     let msg = "Please provide the following attachments:\n";
+        //     attachments.forEach(att => {
+        //         msg += att.dataset.att + "\n";
+        //     });
+        //     alert(msg);
+        //     return false;
+        // }
         return true;
     }
     const pic = document.getElementById('pic');
@@ -432,7 +431,7 @@ $images = json_decode($reject_app['images']);
         });
     }
 
-    document.getElementById("reg-form") && ['file1', 'file2'].forEach((inputId, idx) => {
+    document.getElementById("reg-form") && ['file1', 'file2', 'file3'].forEach((inputId, idx) => {
         setupPreview(inputId, 'preview' + (idx + 1));
     });
     document.addEventListener('DOMContentLoaded', () => {

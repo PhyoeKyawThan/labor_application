@@ -60,12 +60,8 @@
         ];
         $register = $user->register();
         if($register['success'] ?? null){
-            $_SESSION['user_id'] = $register['user']['id'];
-            $_SESSION['username'] = $register['user']['username'];
-            $_SESSION['email'] = $register['user']['email'];
-            $_SESSION['type'] = $register['user']['type'];
             $msg = "Account Created";
-            header("Location: /labor_application/user/?vr=account&msg=Account Created!");
+            header("Location: /labor_application/user/?vr=account&auth=login&msg=Account Successfully created! Login Here");
             exit;
         }
 

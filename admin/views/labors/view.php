@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $model->table_datas = [
         $status,
         $message,
+        false,
         $id
     ];
     if ($model->updateStatus()) {

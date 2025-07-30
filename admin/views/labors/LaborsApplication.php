@@ -25,8 +25,8 @@ class LaborsApplication extends Connection
 
     public function updateStatus(){
         if($this->id > 0){
-            $stmt = parent::$connection->prepare("UPDATE applications SET status = ?, message = ? WHERE id = ?");
-            $types = parent::get_types($this->table_datas) ;
+            $stmt = parent::$connection->prepare("UPDATE applications SET status = ?, message = ?, is_resubmit = ? WHERE id = ?");
+            $types = parent::get_types($this->table_datas);
             $stmt->bind_param($types, ...$this->table_datas);
             return $stmt->execute();
         }

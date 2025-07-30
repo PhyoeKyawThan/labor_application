@@ -79,7 +79,7 @@ class UserModel extends Connection
 
     public function get_registered_status(){
         try {
-            $query = parent::$connection->prepare("SELECT status FROM applications WHERE user_id = ?");
+            $query = parent::$connection->prepare("SELECT status, is_resubmit FROM applications WHERE user_id = ?");
             $query->bind_param('i', $this->user_id);
             mysqli_execute($query);
             $result = $query->get_result();

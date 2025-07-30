@@ -35,14 +35,23 @@ class Connection extends Config
     {
         $types = "";
         foreach ($values as $v) {
-            if (is_int($v)) {
+            if (is_int($v) || is_bool($v)) {
                 $types .= "i";
             }
+        
             if (is_string($v)) {
                 $types .= "s";
             }
         }
         return $types;
+    }
+
+    public static function resolve_type($value){
+        if(is_int($value)){
+            return 'i';
+        }else{
+            return 's';
+        }
     }
 }
 
