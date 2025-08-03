@@ -119,6 +119,7 @@
             <li><a href="<?= BASE_URL.'?vr=dashboard' ?>" style="font-size: 30px; border-bottom: 1px solid black;">Welcome</a></li>
             <li><a href="<?= BASE_URL.'?vr=dashboard' ?>">Dashboard</a></li>
             <li><a href="<?= BASE_URL.'?vr=labors' ?>">Laborers</a></li>
+            <li><a href="<?= BASE_URL.'?vr=employer' ?>">Employers</a></li>
             <li><a href="users.php">Users</a></li>
             <li><a href="contact.php">Contact</a></li>
             <li><a href="contact_msg.php">Messages</a></li>

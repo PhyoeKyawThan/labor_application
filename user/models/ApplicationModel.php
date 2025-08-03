@@ -6,6 +6,13 @@ class ApplicationModel extends Connection
     public $table_datas = null;
     public $application_id = 0;
 
+    public function check_serial($serial_number){
+        $stmt = parent::$connection->prepare("SELECT id FROM applications WHERE serial_number = ? AND status = 'Approved'");
+        $stmt->bind_param("s", $serial_number);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
     public function addApplication()
     {
         $stmt = parent::$connection->prepare("INSERT INTO $this->table_name(

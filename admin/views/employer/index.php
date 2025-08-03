@@ -1,0 +1,150 @@
+<?php
+
+require_once __DIR__ . '/EmployeeReqForm.php';
+$reqModel = new EmployeeReqForm();
+if(isset($_GET['fid'])){
+    require_once __DIR__.'/view.php';
+    exit;
+}
+?>
+<h1>Employee Request List</h1>
+
+<!-- Search Form -->
+<div class="search-form">
+    <form action="" method="GET">
+        <input type="text" name="s" placeholder="Search by name"
+            value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Post Office Box Number</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $no = 0;
+        foreach ($reqModel->readAll() as $req):
+            $no += 1;
+            ?>
+            <tr>
+                <td><?= $no ?></td>
+                <td><?= htmlspecialchars($req['name']) ?></td>
+                <td><?= htmlspecialchars($req['position']) ?></td>
+                <td><?= htmlspecialchars($req['po_box_number']) ?></td>
+                <td><?= htmlspecialchars($req['submitted_at']) ?></td>
+                <td class="actions">
+                    <a href="?vr=employer&fid=<?= $req['id'] ?>">View</a>
+                    <a href="actions/delete_req_form.php?id=<?= $req['id'] ?>"
+                        onclick="return confirm('Are you sure you want to delete this labor?')">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<style>
+    /* Search Form */
+    .search-form {
+        margin: 20px 0;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .search-form form {
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-form input[type="text"] {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 300px;
+    }
+
+    .search-form button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    thead {
+        background-color: #f1f1f1;
+    }
+
+    thead th {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 2px solid #ddd;
+    }
+
+    tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    td img {
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .actions a {
+        margin-right: 8px;
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: background 0.2s;
+    }
+
+    .actions a:first-child {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .actions a:first-child:hover {
+        background-color: #218838;
+    }
+
+    .actions a:last-child {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .actions a:last-child:hover {
+        background-color: #c82333;
+    }
+</style>
