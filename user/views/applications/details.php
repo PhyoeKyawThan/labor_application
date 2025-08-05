@@ -103,7 +103,7 @@
     else:
         $userModel = new UserModel();
         $userModel->user_id = (int) $_SESSION['user_id'];
-        $status = $userModel->get_registered_status();
+        $status = $userModel->get_registered_status($_SESSION['type']);
         if ($status['status'] ?? null):
             $s = $status['status'];
             if (!$status['is_resubmit']):

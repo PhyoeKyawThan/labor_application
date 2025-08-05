@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 $userModel = new UserModel();
 $userModel->user_id = $_SESSION['user_id'];
-$reject_app = $userModel->get_registered_application();
+$reject_app = $userModel->get_registered_application($_SESSION['type']);
 if ($reject_app['status'] != 'Rejected') {
     header("Location: " . BASE_URL . "?vr=applications");
     exit;
@@ -242,6 +242,10 @@ $images = json_decode($reject_app['images']);
             <div>
                 <label for="name">အမည် (Name):</label>
                 <input type="text" id="name" name="name" value="<?= $reject_app['name'] ?>" required>
+            </div>
+             <div>
+                <label for="fathername">အဖအမည် (Name):</label>
+                <input type="text" id="fathername" name="father_name" value="<?= $reject_app['fatherName'] ?>" required>
             </div>
 
             <div>

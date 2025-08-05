@@ -63,10 +63,14 @@ class UserModel extends Connection
         return $qry->fetch_assoc();
     }
 
-    public function get_registered_application()
+    public function get_registered_application($type)
     {
         try {
-            $query = parent::$connection->prepare("SELECT * FROM applications WHERE user_id = ?");
+            if ($type == 'employee') {
+                $query = parent::$connection->prepare("SELECT * FROM applications WHERE user_id = ?");
+            }else{
+                $query = parent::$connection->prepare("SELECT * FROM employee_req_form WHERE user_id = ?");
+            }
             $query->bind_param('i', $this->user_id);
             mysqli_execute($query);
             $result = $query->get_result();
@@ -77,9 +81,13 @@ class UserModel extends Connection
         }
     }
 
-    public function get_registered_status(){
+    public function get_registered_status($type)
+    {
         try {
             $query = parent::$connection->prepare("SELECT status, is_resubmit FROM applications WHERE user_id = ?");
+            if($type == 'employer'){
+                $query = parent::$connection->prepare("SELECT status, is_resubmit FROM employee_req_form WHERE user_id = ?");
+            }
             $query->bind_param('i', $this->user_id);
             mysqli_execute($query);
             $result = $query->get_result();

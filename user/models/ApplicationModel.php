@@ -16,7 +16,8 @@ class ApplicationModel extends Connection
     public function addApplication()
     {
         $stmt = parent::$connection->prepare("INSERT INTO $this->table_name(
-                name, 
+                name,
+                fatherName, 
                 nrc, 
                 serial_number, 
                 township, 
@@ -29,15 +30,18 @@ class ApplicationModel extends Connection
                 stable_address, 
                 picture, 
                 images, 
-                user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $types = parent::get_types(array_values($this->table_datas));
         $stmt->bind_param($types, ...$this->table_datas);
         return $stmt->execute();
     }
 
-    public function getApplication($user_id)
+    public function getApplication($user_id, $type)
     {
         $stmt = parent::$connection->prepare("SELECT * FROM $this->table_name WHERE user_id = ?");
+        if($type == 'employer'){
+            $stmt = parent::$connection->prepare("SELECT * FROM employee_req_form WHERE user_id = ?");
+        }
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();

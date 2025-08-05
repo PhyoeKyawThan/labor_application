@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['email'] = $login['user']['email'];
         $_SESSION['type'] = $login['user']['type'];
         $user->user_id = $_SESSION['user_id'];
-        if (isset($user->get_registered_application()['id'])) {
+        if (isset($user->get_registered_application($_SESSION['type'])['id'])) {
             $_SESSION['applied'] = true;
         }else{
             $_SESSION['applied'] = false;

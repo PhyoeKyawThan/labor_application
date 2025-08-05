@@ -4,12 +4,13 @@ require_once __DIR__ . '/../../models/EmployeeReqFormModel.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $model = new EmployeeReqFormModel();
     $formData = [
-        'name'               => trim($_POST['name']),
-        'position'           => trim($_POST['position']),
+        'name' => trim($_POST['name']),
+        'position' => trim($_POST['position']),
         'department_address' => trim($_POST['department_address']),
-        'po_box_number'      => trim($_POST['po_box_number']),
-        'phone'              => trim($_POST['phone']),
-        'report_receiver'    => trim($_POST['report_receiver'])
+        'occupation' => json_encode($_POST['occupation']),
+        'phone' => trim($_POST['phone']),
+        'report_receiver' => trim($_POST['report_receiver']),
+        'user_id' => $_SESSION['user_id']
     ];
 
     $form_id = $model->createDetails($formData);
@@ -18,10 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($employee_numbers)) {
         $model->createEmployeeNumbers($form_id, $employee_numbers);
+        $_SESSION['applied'] = true;
     }
-
-    // header("Location: thank_you.php");
-    // exit;
 }
 ?>
 
@@ -46,10 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="form-row">
         <div class="form-group">
-            <label for="post-o-Box">Post Office Box Number</label>
-            <input type="text" name="po_box_number" id="post-o-Box">
-        </div>
-        <div class="form-group">
             <label for="phone">Phone Number</label>
             <input type="tel" name="phone" id="phone">
         </div>
@@ -59,9 +54,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="report-receiver">Name and position of the person to whom the workers must report.</label>
         <textarea name="report_receiver" id="report-receiver"></textarea>
     </div>
+    <div id="occupied_work_container">
+        <div class="occupied-work-group" id="occupied-work-group-0">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="occupation-0">Occupation</label>
+                    <input type="text" name="occupation[0][occupation]" id="occupation-0">
+                </div>
+                <div class="form-group">
+                    <label for="male-0">Male</label>
+                    <input type="number" name="occupation[0][male]" id="male-0">
 
+                    <label for="female-0">Female</label>
+                    <input type="number" name="occupation[0][female]" id="female-0">
+                </div>
+                <div class="form-group">
+                    <label for="qualification-0">Qualification</label>
+                    <input type="text" name="occupation[0][qualification]" id="qualification-0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="position-0">Position</label>
+                    <input type="text" name="occupation[0][position]" id="position-0">
+                </div>
+                <div class="form-group">
+                    <label for="salary-0">Salary</label>
+                    <input type="text" name="occupation[0][salary]" id="salary-0">
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" onclick="addOccupiedWork()" class="add-button">Add Occupied Work</button>
     <div id="employee-container">
-        <div class="form-group">
+        <div class="form-group" id="employee-group-0">
             <label for="employee-0">Employee Number</label>
             <input type="text" name="employee[0]" id="employee-0">
             <span id="employee-status-0" class="validation-msg"></span>
@@ -82,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 640px;
+        max-width: 900px;
         box-sizing: border-box;
         margin: auto;
     }
@@ -122,8 +148,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-bottom: 0.25rem;
     }
 
+    .occupied-work-group {
+        border: 1px solid #d1d5db;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        background-color: #f9fafb;
+    }
+
     input[type="text"],
     input[type="tel"],
+    input[type="number"],
     textarea {
         width: 100%;
         padding: 0.5rem 1rem;
@@ -208,6 +243,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         border-color: #10b981;
     }
 
+    .remove-button {
+        margin-top: 0.5rem;
+        background-color: #f87171;
+        /* Red */
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .remove-button:hover {
+        background-color: #dc2626;
+    }
+
+
     /* Responsive adjustments */
     @media (min-width: 768px) {
         .button-group {
@@ -285,6 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         const newDiv = document.createElement('div');
         newDiv.classList.add('form-group');
+        newDiv.id = `employee-group-${employeeCount}`;
 
         const label = document.createElement('label');
         label.setAttribute('for', `employee-${employeeCount}`);
@@ -302,13 +355,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         input.addEventListener('blur', () => validateEmployee(input, statusSpan));
 
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.innerText = 'Remove';
+        removeBtn.classList.add('remove-button');
+        removeBtn.onclick = () => removeEmployee(newDiv.id);
+
         newDiv.appendChild(label);
         newDiv.appendChild(input);
         newDiv.appendChild(statusSpan);
+        newDiv.appendChild(removeBtn);
         container.appendChild(newDiv);
 
         employeeCount++;
     }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         const initialInput = document.getElementById('employee-0');
@@ -332,4 +393,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             alert("Please correct all invalid employee numbers before submitting the form.");
         }
     });
+    function removeEmployee(id) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.remove();
+        }
+    }
+
+    let occupiedWorkCount = 1;
+
+    function addOccupiedWork() {
+        const container = document.getElementById('occupied_work_container');
+
+        const groupId = `occupied-work-group-${occupiedWorkCount}`;
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('occupied-work-group');
+        newDiv.id = groupId;
+
+        newDiv.innerHTML = `
+        <div class="form-row">
+            <div class="form-group">
+                <label for="occupation-${occupiedWorkCount}">Occupation</label>
+                <input type="text" name="occupation[${occupiedWorkCount}][occupation]" id="occupation-${occupiedWorkCount}">
+            </div>
+            <div class="form-group">
+                <label for="male-${occupiedWorkCount}">Male</label>
+                <input type="number" name="occupation[${occupiedWorkCount}][male]" id="male-${occupiedWorkCount}">
+
+                    <label for="female-${occupiedWorkCount}">Female</label>
+                    <input type="number" name="occupation[${occupiedWorkCount}][female]" id="female-${occupiedWorkCount}">
+                    </div>
+                    <div class="form-group">
+                        <label for="qualification-${occupiedWorkCount}">Qualification</label>
+                        <input type="text" name="occupation[${occupiedWorkCount}][qualification]" id="qualification-${occupiedWorkCount}">
+                    </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="position-${occupiedWorkCount}">Position</label>
+                    <input type="text" name="occupation[${occupiedWorkCount}][position]" id="position-${occupiedWorkCount}">
+                </div>
+                <div class="form-group">
+                    <label for="salary-${occupiedWorkCount}">Salary</label>
+                    <input type="text" name="occupation[${occupiedWorkCount}][salary]" id="salary-${occupiedWorkCount}">
+                </div>
+            </div>
+            <button type="button" class="remove-button" onclick="removeOccupiedWork('${groupId}')">Remove</button>
+        `;
+
+        container.appendChild(newDiv);
+        occupiedWorkCount++;
+    }
+
+    function removeOccupiedWork(id) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.remove();
+        }
+    }
+
+
 </script>

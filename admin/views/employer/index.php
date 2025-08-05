@@ -24,7 +24,7 @@ if(isset($_GET['fid'])){
             <th>No.</th>
             <th>Name</th>
             <th>Position</th>
-            <th>Post Office Box Number</th>
+            <th>Status</th>
             <th>Submitted</th>
             <th>Actions</th>
         </tr>
@@ -39,7 +39,7 @@ if(isset($_GET['fid'])){
                 <td><?= $no ?></td>
                 <td><?= htmlspecialchars($req['name']) ?></td>
                 <td><?= htmlspecialchars($req['position']) ?></td>
-                <td><?= htmlspecialchars($req['po_box_number']) ?></td>
+                <td><?= htmlspecialchars($req['status']) ?></td>
                 <td><?= htmlspecialchars($req['submitted_at']) ?></td>
                 <td class="actions">
                     <a href="?vr=employer&fid=<?= $req['id'] ?>">View</a>

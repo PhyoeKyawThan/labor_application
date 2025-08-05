@@ -12,17 +12,19 @@ class EmployeeReqFormModel extends Connection
             name, 
             position, 
             department_address, 
-            po_box_number, 
             phone, 
-            report_receiver
-        ) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", 
+            occupation,
+            report_receiver,
+            user_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssi", 
             $data['name'],
             $data['position'],
             $data['department_address'],
-            $data['po_box_number'],
             $data['phone'],
-            $data['report_receiver']
+            $data['occupation'],
+            $data['report_receiver'],
+            $data['user_id']
         );
         
         $stmt->execute();

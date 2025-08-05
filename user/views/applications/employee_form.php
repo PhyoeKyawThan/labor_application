@@ -234,7 +234,10 @@ require_once __DIR__ . '/helpers/drop_datas.php';
                 <label for="name">အမည် (Name):</label>
                 <input type="text" id="name" name="name" required>
             </div>
-
+             <div>
+                <label for="fathername">အဖအမည် (Name):</label>
+                <input type="text" id="fathername" name="father_name" required>
+            </div>
             <div>
                 <label for="nrc">မှတ်ပုံတင်အမှတ် (NRC):</label>
                 <div id="nrc">

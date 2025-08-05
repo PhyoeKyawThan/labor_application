@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $appModel = new ApplicationModel();
     $connection = $appModel->get_connection();
-    $existing = $appModel->getApplication($user_id);
+    $existing = $appModel->getApplication($user_id, $_SESSION['type']);
 
     if (!$existing) {
         header("Location: /labor_application/user/?vr=applications&msg=Incorrect Rejected Application Submitted!");
@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     $name = $_POST['name'];
+    $fatherName = $_POST['father_name'];
     $region = explode("(", explode(")", urldecode($_POST['region']))[0])[1];
     $nrc_str = $_POST['nrc_code'] . '/' . $region . '(' . urldecode($_POST['nrc_type']) . ')' . $_POST['nrc_no'];
     $township = $_POST['township'];
@@ -64,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $appModel->table_datas = [
         "name" => $name,
+        "fatherName" => $fatherName,
         "nrc" => $nrc_str,
         "township" => $township,
         "phone" => $phone,

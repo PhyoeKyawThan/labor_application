@@ -1,18 +1,19 @@
 <main>
-    <?php 
-        if(isset($_GET['auth'])){
-            $_GET['auth'] == 'signup' ? require_once __DIR__.'/signup.php' : require_once __DIR__.'/login.php';
-            exit;
-        }
-        
-        if(!isset($_SESSION['user_id'])){
-            header("Location: $current_path&auth=login");
-            exit;
-        }
-        $model = new ApplicationModel();
-        $application = $model->getApplication($_SESSION['user_id']);
+    <?php
+    if (isset($_GET['auth'])) {
+        $_GET['auth'] == 'signup' ? require_once __DIR__ . '/signup.php' : require_once __DIR__ . '/login.php';
+        exit;
+    }
+
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: $current_path&auth=login");
+        exit;
+    }
+    $model = new ApplicationModel();
+    $application = $model->getApplication($_SESSION['user_id'], $_SESSION['type']);
+
     ?>
- 
+
     <style>
         * {
             box-sizing: border-box;
@@ -101,15 +102,29 @@
         <div>Account Type: <b><?= ucfirst($_SESSION['type']) ?></b></div>
     </div>
 
-    <?php if ($application['id'] ?? null): ?>
-        <div class="card" id="application-status">
-            <h1>Application Status</h1>
-            <div>Serial Number: <b><?= $application['serial_number'] ?></b></div>
-            <div>Name: <b><?= $application['name'] ?></b></div>
-            <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
-            <?php if (!empty($application['message'])): ?>
-                <div>Remark:<p><?= nl2br(htmlspecialchars($application['message'])) ?></p></div>
-            <?php endif; ?>
-        </div>
-    <?php endif; ?>
+    <?php if ($application['id'] ?? null):
+        if ($_SESSION['type'] == 'employee'): ?>
+            <div class="card" id="application-status">
+                <h1>Application Status</h1>
+                <div>Serial Number: <b><?= $application['serial_number'] ?></b></div>
+                <div>Name: <b><?= $application['name'] ?></b></div>
+                <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
+                <?php if (!empty($application['message'])): ?>
+                    <div>Remark:<p><?= nl2br(htmlspecialchars($application['message'])) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="card" id="application-status">
+                <h1>Application Status</h1>
+                <div>Name: <b><?= $application['name'] ?></b></div>
+                <div>Position: <b><?= $application['position'] ?></b></div>
+                <div>Department Address: </div>
+                <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
+                <?php if (!empty($application['message'])): ?>
+                    <div>Remark:<p><?= nl2br(htmlspecialchars($application['message'])) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; endif; ?>
 </main>
