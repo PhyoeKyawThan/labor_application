@@ -173,10 +173,8 @@
                     class="fas fa-mark"></i>Incorrect</button>
             <button onclick="downloadTwoPagePdf()">View as Pdf</button>
         </div>
-        <!-- <button onclick="window.print()">Print</button> -->
     </div>
 
-    <!-- First Page -->
     <div class="a4-container">
         <div class="header">
             <div class="office-name">

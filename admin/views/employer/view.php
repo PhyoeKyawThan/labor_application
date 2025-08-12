@@ -93,8 +93,8 @@ function getMyanmarDateComponents($date_string)
 
 $formatted_date = formatMyanmarDate($detail['submitted_at']);
 
-if(isset($_GET['pf'])){
-    require __DIR__.'/prefilled_form.php';
+if (isset($_GET['pf'])) {
+    require __DIR__ . '/prefilled_form.php';
     exit;
 }
 
@@ -233,11 +233,13 @@ if(isset($_GET['pf'])){
     .to {
         margin-top: 40px;
     }
-    .actions{
+
+    .actions {
         display: flex;
         justify-content: end;
     }
-    .actions a{
+
+    .actions a {
         text-decoration: none;
         border-radius: 8px;
         padding: 8px 20px;
@@ -247,7 +249,7 @@ if(isset($_GET['pf'])){
         transition: 0.3s ease-in;
     }
 
-    .actions a:hover{
+    .actions a:hover {
         background-color: #007bff;
     }
 
@@ -283,13 +285,13 @@ if(isset($_GET['pf'])){
         }
     }
 
-    .employer-detail{
+    .employer-detail {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    .header_{
+    .header_ {
         display: flex;
         justify-content: start;
         align-items: center;
@@ -305,6 +307,22 @@ if(isset($_GET['pf'])){
         <i class="fas fa-arrow-left"></i>
     </a>
     <h3>Employee Requests form</h3>
+    <?php
+    $status = $detail['status'];
+
+    $bgColor = match ($status) {
+        'Pending' => 'background-color: gold; color: black;',
+        'Department Approvel' => 'background-color: royalblue; color: white;',
+        'Finished' => 'background-color: green; color: white;',
+        'Rejected' => 'background-color: red; color: white;',
+        default => 'background-color: gray; color: white;',
+    };
+    ?>
+
+    <span style="<?= $bgColor ?> padding: 3px 8px; border-radius: 4px;">
+        <?= htmlspecialchars($status) ?>
+    </span>
+
 </div>
 <div class="card-list-container">
     <div class="print-button-container">
@@ -312,7 +330,7 @@ if(isset($_GET['pf'])){
     </div>
     <div class="employer-detail">
         <div>
-           <strong>Name:</strong> <?= $detail['name'] ?>
+            <strong>Name:</strong> <?= $detail['name'] ?>
         </div>
         <div>
             <strong>Position:</strong> <?= $detail['position'] ?>

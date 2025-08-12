@@ -98,6 +98,9 @@ class EmployeeReqForm extends Connection
         return $stmt->execute();
     }
 
+    public function changeStatus($form_id, $status){
+        return parent::$connection->query("UPDATE employee_req_form SET status = '$status' WHERE id = $form_id");;
+    }
     public function readAll(){
         $query = parent::$connection->query("SELECT * FROM employee_req_form ORDER BY id DESC");
         return $query->fetch_all(MYSQLI_ASSOC);

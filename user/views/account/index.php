@@ -130,7 +130,10 @@
                 <h1>Application Status</h1>
                 <div>Name: <b><?= $application['name'] ?></b></div>
                 <div>Position: <b><?= $application['position'] ?></b></div>
-                <div>Department Address: </div>
+                <!-- <div>Department Address: </div> -->
+                <div>View Approval: <a href="">
+                    <i class="fas fa-eye"></i>
+                </a></div>
                 <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
                 <?php
                 if (!empty($application['message'])): ?>

@@ -1,19 +1,30 @@
 <?php
 
-$occupation = json_decode($detail['occupation'], true)[0];
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if(isset($_GET['pa'])){
+$occupation = isset($detail) ? json_decode($detail['occupation'], true)[0] : null;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_GET['pa'])) {
         $to = $_POST['to'];
         $department = $_POST['department'];
         $date = $_POST['date'];
         $letter_no = $_POST['letter_no'];
         $position = $_POST['position'];
-        require_once __DIR__.'/accepted_form.php';
+        require_once __DIR__ . '/accepted_form.php';
+        exit;
+    }
+}
+if (isset($_GET['correct'])) {
+    if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
+        $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
+        echo $red_url;
+        echo "<script>window.location.href = '$red_url'; </script>";
         exit;
     }
 }
 ?>
 <div id="prefill-accepted-form">
+    <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2' ?>">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <h2>အလုပ်သမား ရှာဖွေရေး ဖောင်</h2>
     <form action="<?= $_SERVER['REQUEST_URI'] ?>&pa=true" method="post">
         <div>
@@ -59,6 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
 
     #prefill-accepted-form {
+        margin: auto;
         background-color: #ffffff;
         padding: 2rem;
         border-radius: 0.5rem;
