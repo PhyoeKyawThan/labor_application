@@ -18,6 +18,7 @@ class ApplicationModel extends Connection
         $stmt = parent::$connection->prepare("INSERT INTO $this->table_name(
                 name,
                 fatherName, 
+                age,
                 nrc, 
                 serial_number, 
                 township, 
@@ -30,7 +31,7 @@ class ApplicationModel extends Connection
                 stable_address, 
                 picture, 
                 images, 
-                user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $types = parent::get_types(array_values($this->table_datas));
         $stmt->bind_param($types, ...$this->table_datas);
         return $stmt->execute();

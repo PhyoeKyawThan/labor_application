@@ -93,6 +93,7 @@ if (!empty($laborer['images'])) {
     input[type="text"],
     input[type="date"],
     input[type="email"],
+    input[type="number"],
     textarea,
     select {
         width: 100%;
@@ -164,9 +165,9 @@ if (!empty($laborer['images'])) {
 </style>
 
 <h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
-<div><?= $msg ?? '' ?></div>
-<div><?= $err ?? '' ?> </div>
 <form action="" method="POST" enctype="multipart/form-data" novalidate>
+    <div style="color: green;"><?= $msg ?? '' ?></div>
+    <div style="color: red;"><?= $err ?? '' ?> </div>
     <input type="hidden" name="id" value="<?= (int) $laborer['id'] ?>" id="id">
 
     <div>
@@ -181,6 +182,10 @@ if (!empty($laborer['images'])) {
         <label for="email">Email</label>
         <input type="email" id="email" name="email" value="<?= htmlspecialchars($laborer['email']) ?>" disabled
             required>
+    </div>
+    <div>
+        <label for="age">Age</label>
+        <input type="number" name="age" id="age" value="<?= $laborer['age'] ?>" disabled required>
     </div>
     <div>
         <label for="township">Township</label>

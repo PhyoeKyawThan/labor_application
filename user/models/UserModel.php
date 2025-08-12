@@ -34,7 +34,6 @@ class UserModel extends Connection
         try {
             $query = "SELECT * FROM users WHERE email = ?";
             $stmt = parent::$connection->prepare($query);
-            $types = parent::get_types($this->table_datas['email']);
             $stmt->bind_param('s', $this->table_datas['email']);
             $stmt->execute();
             $result = $stmt->get_result();

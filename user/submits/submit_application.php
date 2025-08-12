@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $religion = $_POST['religion'];
     $edu_level = $_POST['edu_level'];
     $stable_address = $_POST['stable_address'];
+    $age = $_POST['age'];
 
     $picture = upload($flag = 'picture');
 
@@ -40,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $appModel->table_datas = [
             $name,
             $fatherName,
+            $age,
             $nrc_str,
             $serial_number,
             $township,

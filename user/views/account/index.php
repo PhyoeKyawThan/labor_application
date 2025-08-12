@@ -109,7 +109,18 @@
                 <div>Serial Number: <b><?= $application['serial_number'] ?></b></div>
                 <div>Name: <b><?= $application['name'] ?></b></div>
                 <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
-                <?php if (!empty($application['message'])): ?>
+                <?php
+                if ($application['status'] == 'Approved'):
+                    ?>
+                    <div>
+                        View Labor Card: 
+                        <a
+                            href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?>views/cards/labor.php?sn=<?= $application['serial_number'] ?>" target="_blank">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                <?php endif;
+                if (!empty($application['message'])): ?>
                     <div>Remark:<p><?= nl2br(htmlspecialchars($application['message'])) ?></p>
                     </div>
                 <?php endif; ?>
@@ -121,7 +132,8 @@
                 <div>Position: <b><?= $application['position'] ?></b></div>
                 <div>Department Address: </div>
                 <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
-                <?php if (!empty($application['message'])): ?>
+                <?php
+                if (!empty($application['message'])): ?>
                     <div>Remark:<p><?= nl2br(htmlspecialchars($application['message'])) ?></p>
                     </div>
                 <?php endif; ?>
