@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A4 Printable Form</title>
     <style>
-        /* General page and typography styles */
         body {
             font-family: "Myanmar3", "Noto Sans Myanmar", sans-serif;
             margin: 0;
@@ -17,11 +16,10 @@
             min-height: 100vh;
         }
 
-        /* A4 page dimensions and styling for screen view */
         .a4-page {
             width: 210mm;
             height: 297mm;
-            padding: 15mm; /* Reduced padding to fit more content */
+            padding: 15mm; 
             background-color: #fff;
             box-shadow: 0 0 10mm rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
@@ -31,7 +29,6 @@
             line-height: 1.5;
         }
 
-        /* Header styles */
         .header {
             text-align: center;
         }
@@ -53,23 +50,22 @@
         }
         .header-line-item p {
             margin: 0;
-            width: 150px; /* Fixed width for the label */
+            width: 150px; 
         }
         .header-line-item span {
             flex-grow: 1;
             border-bottom: 1px solid #000;
             margin-left: 10px;
             text-align: left;
-            height: 1.2em; /* To ensure a consistent line height */
+            height: 1.2em; 
         }
 
-        /* Main content table styles */
         .main-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8em;
             margin-top: 20px;
-            table-layout: fixed; /* Ensures columns are of fixed width */
+            table-layout: fixed; 
         }
         .main-table th, .main-table td {
             border: 1px solid #000;
@@ -82,10 +78,9 @@
             background-color: #f9f9f9;
         }
         .main-table td {
-            height: 80px; /* Set a fixed height for data rows */
+            height: 80px; 
         }
 
-        /* Adjusting for specific table columns */
         .main-table th:nth-child(1) { width: 20%; }
         .main-table th:nth-child(2) { width: 10%; }
         .main-table th:nth-child(3) { width: 10%; }
@@ -94,8 +89,6 @@
         .main-table th:nth-child(6) { width: 10%; }
         .main-table th:nth-child(7) { width: 15%; }
 
-
-        /* Footer styles */
         .footer {
             margin-top: auto;
             font-size: 0.85em;
@@ -130,7 +123,6 @@
             margin-top: 30px;
         }
 
-        /* Print-specific styles */
         @media print {
             body {
                 background: none;
@@ -150,7 +142,6 @@
 <body>
 
     <div class="a4-page">
-        <!-- Header Section -->
         <div class="header">
             <div class="header-subtitle">
                 <span>အလွယ်ရေး(ပုံစံ-၃)</span>
@@ -161,7 +152,6 @@
             </div>
         </div>
 
-        <!-- Pre-Table Lines -->
         <div class="header-line-item" style="margin-top: 20px;">
             <p>၁။ အလျှောက်လွှာတင်သွင်းသူ၏အမည်၊ ရာထူး/ဌာန</p>
             <span></span>
@@ -179,7 +169,6 @@
             <span></span>
         </div>
 
-        <!-- Main Form Content Table -->
         <table class="main-table">
             <thead>
                 <tr>
@@ -205,7 +194,6 @@
                     <td>(၆)</td>
                     <td>(၇)</td>
                 </tr>
-                <!-- Rows for data entry, including the sub-rows in the second column -->
                 <tr>
                     <td></td>
                     <td></td>
@@ -254,7 +242,6 @@
             </tbody>
         </table>
 
-        <!-- Footer Section -->
         <div class="footer">
             <div class="footer-lines">
                 <div class="footer-line">

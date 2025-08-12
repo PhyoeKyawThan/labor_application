@@ -51,6 +51,7 @@ class EmployeeReqForm extends Connection
 
     public function readEmployeeNumbers($form_id)
     {
+        $form_id = (int) $form_id;
         $stmt = parent::$connection->prepare("SELECT serial_number FROM $this->numbers_table WHERE form_id = ?");
         $stmt->bind_param("i", $form_id);
         $stmt->execute();
@@ -60,6 +61,17 @@ class EmployeeReqForm extends Connection
             $numbers[] = $row['serial_number'];
         }
         return $numbers;
+    }
+
+    public function readEmployeeDetails($form_id){
+        $employee_numbers = $this->readEmployeeNumbers($form_id);
+        $emplyoees = [];
+        foreach($employee_numbers as $e){
+            $stmt = parent::$connection->query("SELECT * FROM applications WHERE serial_number = '$e'");
+            $emplyoees[] = $stmt->fetch_assoc();
+        }
+
+        return $emplyoees;
     }
 
     public function updateDetails($form_id, $data)

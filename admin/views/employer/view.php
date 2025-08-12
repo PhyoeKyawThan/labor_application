@@ -48,7 +48,55 @@ function formatMyanmarDate($date_string)
     return $myanmar_year . ' ခုနှစ်၊ ' . $myanmar_month_name . ' လ၊ ' . $myanmar_day . ' ရက်';
 }
 
+function getMyanmarDateComponents($date_string)
+{
+    if (empty($date_string)) {
+        return [];
+    }
+
+    try {
+        $date = new DateTime($date_string);
+    } catch (Exception $e) {
+        return []; // Return an empty array on invalid date
+    }
+
+    $myanmar_numbers = ['၀', '၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉'];
+    $myanmar_months = [
+        1 => '၀၁',
+        2 => '၀၂',
+        3 => '၀၃',
+        4 => '၀၄',
+        5 => '၀၅',
+        6 => '၀၆',
+        7 => '၀၇',
+        8 => '၀၈',
+        9 => '၀၉',
+        10 => '၁၀',
+        11 => '၁၁',
+        12 => '၁၂'
+    ];
+
+    $year = $date->format('Y');
+    $month = (int) $date->format('m');
+    $day = $date->format('d');
+
+    $myanmar_year = str_replace(range(0, 9), $myanmar_numbers, $year);
+    $myanmar_day = str_replace(range(0, 9), $myanmar_numbers, $day);
+    $myanmar_month_name = $myanmar_months[$month];
+
+    return [
+        'year' => $myanmar_year,
+        'month' => $myanmar_month_name,
+        'day' => $myanmar_day,
+    ];
+}
+
 $formatted_date = formatMyanmarDate($detail['submitted_at']);
+
+if(isset($_GET['pf'])){
+    require __DIR__.'/prefilled_form.php';
+    exit;
+}
 
 ?>
 
@@ -185,6 +233,23 @@ $formatted_date = formatMyanmarDate($detail['submitted_at']);
     .to {
         margin-top: 40px;
     }
+    .actions{
+        display: flex;
+        justify-content: end;
+    }
+    .actions a{
+        text-decoration: none;
+        border-radius: 8px;
+        padding: 8px 20px;
+        background-color: #0057b387;
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in;
+    }
+
+    .actions a:hover{
+        background-color: #007bff;
+    }
 
 
     @media print {
@@ -281,7 +346,7 @@ $formatted_date = formatMyanmarDate($detail['submitted_at']);
         <?php endforeach; ?>
     </div>
     <div class="actions">
-        <a href="">Request an approval Of the requested Department</a>
+        <a href="<?= $_SERVER['REQUEST_URI'] ?>&pf=true">Request an approval Of the requested Department</a>
     </div>
 </div>
 
