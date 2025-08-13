@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      <div class="form-row">
         <div class="form-group">
             <label for="letter_no">Letter No.</label>
-            <input type="letter_no" name="letter_no" id="letter_no">
+            <input type="text" name="letter_no" id="letter_no">
         </div>
     </div>
 
@@ -94,10 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="position-0">Position</label>
                     <input type="text" name="occupation[0][position]" id="position-0">
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="salary-0">Salary</label>
                     <input type="text" name="occupation[0][salary]" id="salary-0">

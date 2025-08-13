@@ -160,7 +160,7 @@
 
 <body>
     <div class="controls-container">
-        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2&pf=true' ?>">
+        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid='.$_GET['fid'].'&pf=true' ?>">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2>Preview</h2>
