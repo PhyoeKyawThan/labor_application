@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../../models/EmployeeReqFormModel.php';
+require_once __DIR__ . '/helpers/drop_datas.php';
+$position_codes = require_once __DIR__.'/../../../commons/position_codes.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $model = new EmployeeReqFormModel();
@@ -59,7 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-row">
                 <div class="form-group">
                     <label for="occupation-0">Occupation</label>
-                    <input type="text" name="occupation[0][occupation]" id="occupation-0">
+                    <select name="occupation[0][occupation]" id="occupation-0">
+                        <?php foreach(array_keys($position_codes['employee_codes']) as $position):
+                        ?>
+                        <option value="<?= $position ?>"><?= $position ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="male-0">Male</label>
@@ -70,7 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="qualification-0">Qualification</label>
-                    <input type="text" name="occupation[0][qualification]" id="qualification-0">
+                    <!-- <input type="text" name="occupation[0][qualification]" id="qualification-0"> -->
+                    <select name="occupation[0][qualification]" id="qualification-0">
+                        <?php foreach($educationLevels as $edu_level):
+                        ?>
+                        <option value="<?= $edu_level ?>"><?= $edu_level ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
             <div class="form-row">
@@ -85,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-    <button type="button" onclick="addOccupiedWork()" class="add-button">Add Occupied Work</button>
+    <!-- <button type="button" onclick="addOccupiedWork()" class="add-button">Add Occupied Work</button> -->
     <div id="employee-container">
         <div class="form-group" id="employee-group-0">
             <label for="employee-0">Employee Number</label>
@@ -158,6 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     input[type="text"],
     input[type="tel"],
+    select,
     input[type="number"],
     textarea {
         width: 100%;
@@ -170,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     input:focus,
+    select:focus,
     textarea:focus {
         border-color: #3b82f6;
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);

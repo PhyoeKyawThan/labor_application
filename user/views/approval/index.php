@@ -1,4 +1,28 @@
-<!DOCTYPE html>
+<?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+if(!isset($_SESSION['app_id']) && !isset($_SESSION['user_id'])){
+    die("Require information");
+}
+
+$form_id = $_SESSION['app_id'];
+$user_id = $_SESSION['user_id'];
+
+require __DIR__.'/../../../admin/views/employer/EmployeeReqForm.php';
+require __DIR__.'/../../../commons/DateConverter.php';
+$reqModel = new EmployeeReqForm();
+
+$detail = $reqModel->readDetails($form_id);
+$occupation = json_decode($detail['occupation'], true)[0];
+if(isset($_GET['confirm'])){
+    if($reqModel->changeStatus($form_id, 'Finished')){
+        header("Location: /labor_application/user/?vr=account");
+        exit;
+    }
+}
+?><!DOCTYPE html>
 <html lang="my">
 
 <head>
@@ -159,22 +183,18 @@
 </head>
 
 <body>
+
     <div class="controls-container">
         <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2&pf=true' ?>">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h2>Preview</h2>
+        <h2>Confirmation</h2>
         <div display="flex">
-            <button style="background-color: green;"
-                onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&correct=true'"><i
-                    class="fas fa-mark"></i><?= $detail['status'] ?></button>
-            
-            <!-- <button style="background-color: green;"
-                onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&incorrectcorrect=true'"><i
-                    class="fas fa-mark"></i>Incorrect</button> -->
+            <a href="?confirm=true">
+                Confirm
+            </a>
             <button onclick="downloadTwoPagePdf()">View as Pdf</button>
         </div>
-        <!-- <button onclick="window.print()">Print</button> -->
     </div>
 
     <!-- First Page -->
@@ -206,7 +226,7 @@
                 သို့
             </div>
             <div class="to-line">
-                <?= $to ?>
+                <?= $detail['toDeliver'] ?>
             </div>
         </div>
 
@@ -216,15 +236,15 @@
             </p>
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
-                <span><?= $department ?> ဌာန၏ <?= formatMyanmarDate($date) ?> ရက်စွဲပါ စာအမှတ်၊
+                <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ်၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>
 
             <p>
-                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $department ?> ဌာနတွင်
+                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $detail['name'] ?> ဌာနတွင်
                 လစ်လပ်‌လျှက်ရှိသော
-                <?= $position ?> ရာထူး နေရာအတွက် အလုပ်လုပ်ကိုင် သူများစာရင်း အလလခပုံစံ(၆) (၂)နှစ်စုံအား
+                <?= $occupation['occupation'] ?> ရာထူး နေရာအတွက် အလုပ်လုပ်ကိုင် သူများစာရင်း အလလခပုံစံ(၆) (၂)နှစ်စုံအား
                 ရွေးချယ်နိုင်ပါရန်
                 ပူးတွဲပေးပို့အပ်ပါသည်။
             </p>
@@ -245,7 +265,7 @@
     <br>
 
     <?php
-    $employees = $reqModel->readEmployeeDetails($_GET['fid']);
+    $employees = $reqModel->readEmployeeDetails($form_id);
     ?>
     <div class="a4-container employees">
         <span><b>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)</b></span>
@@ -255,7 +275,7 @@
         <span style="font-size: 19px;"><b>အလုပ်သမားအင်အားစာရင်း</b></span>
         <br>
         <span>
-            အလုပ်သမားအင်အားတောင်းခံသည့်ဌာန: <?= $department ?>
+            အလုပ်သမားအင်အားတောင်းခံသည့်ဌာန: <?= $detail['name'] ?>
         </span>
         <table>
             <thead>
@@ -285,7 +305,7 @@
                         <td><?= $e['name'] ?></td>
                         <td><?= $e['age'] ?></td>
                         <td><?= $e['fatherName'] ?></td>
-                        <td><?= $e_codes[$position] ?? 'N/A' ?></td>
+                        <td><?= $e_codes[$occupation['occupation']] ?? 'N/A' ?></td>
                         <td><?= $e['serial_number'] ?></td>
                         <td><?= $reg_date_components['day'] . '/' . $reg_date_components['month'] . '/' . $reg_date_components['year'] ?>
                         </td>

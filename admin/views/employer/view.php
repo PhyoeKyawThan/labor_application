@@ -363,6 +363,30 @@ if (isset($_GET['pf'])) {
             </div>
         <?php endforeach; ?>
     </div>
+    <h1>Requested Employees</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Serial Number</th>
+                <th>Education</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                foreach($reqModel->readEmployeeDetails($_GET['fid']) as $index => $emp):
+            ?>
+            <tr>
+                <td><?= ++$index ?></td>
+                <td><?= $emp['name'] ?></td>
+                <td><?= $emp['serial_number'] ?></td>
+                <td><?= $emp['edu_level'] ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <hr>
     <div class="actions">
         <a href="<?= $_SERVER['REQUEST_URI'] ?>&pf=true">Request an approval Of the requested Department</a>
     </div>

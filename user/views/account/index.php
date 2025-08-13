@@ -113,9 +113,9 @@
                 if ($application['status'] == 'Approved'):
                     ?>
                     <div>
-                        View Labor Card: 
-                        <a
-                            href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?>views/cards/labor.php?sn=<?= $application['serial_number'] ?>" target="_blank">
+                        View Labor Card:
+                        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?>views/cards/labor.php?sn=<?= $application['serial_number'] ?>"
+                            target="_blank">
                             <i class="fas fa-eye"></i>
                         </a>
                     </div>
@@ -131,9 +131,20 @@
                 <div>Name: <b><?= $application['name'] ?></b></div>
                 <div>Position: <b><?= $application['position'] ?></b></div>
                 <!-- <div>Department Address: </div> -->
-                <div>View Approval: <a href="">
-                    <i class="fas fa-eye"></i>
+                <div>Status: <b><?= $application['status'] ?></b></div>
+                <?php
+                if ($application['status'] == 'Department Approvel'):
+                    $_SESSION['app_id'] = $application['id'];
+                    ?>
+                    <div>View Approval: <a href="<?= BASE_URL . '/views/approval/' ?>">
+                            <i class="fas fa-eye"></i> Approval Confirmation
+                        </a></div>
+                <?php endif;
+                if($application['status'] == 'Finished'): ?>
+                <div>Get Employed Cards: <a href="<?= BASE_URL.'/views/cards/employed_card.php' ?>" target="_blank">
+                    get
                 </a></div>
+                <?php endif; ?>
                 <div>Status: <span class="status <?= $application['status'] ?>"><?= $application['status'] ?></span></div>
                 <?php
                 if (!empty($application['message'])): ?>

@@ -8,28 +8,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date = $_POST['date'];
         $letter_no = $_POST['letter_no'];
         $position = $_POST['position'];
+        $reqModel->insertDepartmentApproval([
+            $to,
+            $department,
+            $date,
+            (int) $_GET['fid']
+        ]);
+        if (isset($_POST['correct'])) {
+            if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
+                $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
+            }
+        }
+        $detail = $reqModel->readDetails($_GET['fid']);
         require_once __DIR__ . '/accepted_form.php';
         exit;
     }
 }
-if (isset($_GET['correct'])) {
-    if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
-        $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
-        echo $red_url;
-        echo "<script>window.location.href = '$red_url'; </script>";
-        exit;
-    }
-}
+
 ?>
 <div id="prefill-accepted-form">
-    <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2' ?>">
+    <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid='.$_GET['fid'] ?>">
         <i class="fas fa-arrow-left"></i>
     </a>
     <h2>အလုပ်သမား ရှာဖွေရေး ဖောင်</h2>
     <form action="<?= $_SERVER['REQUEST_URI'] ?>&pa=true" method="post">
+        <input type="hidden" name="correct" value="true">
         <div>
             <label for="to-line-3">သို့:</label>
-            <textarea type="text" name="to" id="to-3" placeholder="မည်သူ့ထံသို့"></textarea>
+            <textarea type="text" name="to" id="to-3" placeholder="မည်သူ့ထံသို့"><?= $detail['toDeliver'] ?></textarea>
         </div>
 
 
@@ -61,7 +67,7 @@ if (isset($_GET['correct'])) {
 
         <div class="button-container">
             <button type="submit">
-                ပေးပိုရန်
+                Request Approval
             </button>
         </div>
     </form>

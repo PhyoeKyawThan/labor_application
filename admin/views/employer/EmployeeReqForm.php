@@ -16,7 +16,8 @@ class EmployeeReqForm extends Connection
             phone, 
             report_receiver
         ) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", 
+        $stmt->bind_param(
+            "ssssss",
             $data['name'],
             $data['position'],
             $data['department_address'],
@@ -24,16 +25,16 @@ class EmployeeReqForm extends Connection
             $data['phone'],
             $data['report_receiver']
         );
-        
+
         $stmt->execute();
-        return $stmt->insert_id; 
+        return $stmt->insert_id;
     }
 
     public function createEmployeeNumbers($form_id, $serial_numbers)
     {
         $sql = "INSERT INTO $this->numbers_table(form_id, serial_number) VALUES (?, ?)";
         $stmt = parent::$connection->prepare($sql);
-        
+
         foreach ($serial_numbers as $number) {
             $stmt->bind_param("is", $form_id, $number);
             $stmt->execute();
@@ -43,7 +44,7 @@ class EmployeeReqForm extends Connection
 
     public function readDetails($form_id)
     {
-        $stmt = parent::$connection->prepare("SELECT * FROM $this->details_table WHERE id = ?");
+        $stmt = parent::$connection->prepare("SELECT r.*, da.toDeliver, da.approval_req_date FROM $this->details_table as r JOIN department_approval as da ON da.employee_req_id = r.id WHERE r.id = ?");
         $stmt->bind_param("i", $form_id);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
@@ -63,16 +64,36 @@ class EmployeeReqForm extends Connection
         return $numbers;
     }
 
-    public function readEmployeeDetails($form_id){
+    public function readEmployeeDetails($form_id)
+    {
         $employee_numbers = $this->readEmployeeNumbers($form_id);
         $emplyoees = [];
-        foreach($employee_numbers as $e){
+        foreach ($employee_numbers as $e) {
             $stmt = parent::$connection->query("SELECT * FROM applications WHERE serial_number = '$e'");
             $emplyoees[] = $stmt->fetch_assoc();
         }
 
         return $emplyoees;
     }
+
+    public function insertDepartmentApproval($datas)
+    {
+        $sql = "INSERT INTO department_approval (
+                toDeliver, 
+                department_name, 
+                approval_req_date, 
+                employee_req_id
+            ) VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                toDeliver = VALUES(toDeliver),
+                department_name = VALUES(department_name),
+                approval_req_date = VALUES(approval_req_date)";
+
+        $stmt = parent::$connection->prepare($sql);
+        $stmt->bind_param('sssi', ...$datas);
+        return $stmt->execute();
+    }
+
 
     public function updateDetails($form_id, $data)
     {
@@ -85,7 +106,8 @@ class EmployeeReqForm extends Connection
             report_receiver = ?
             WHERE id = ?");
 
-        $stmt->bind_param("ssssssi",
+        $stmt->bind_param(
+            "ssssssi",
             $data['name'],
             $data['position'],
             $data['department_address'],
@@ -94,14 +116,17 @@ class EmployeeReqForm extends Connection
             $data['report_receiver'],
             $form_id
         );
-        
+
         return $stmt->execute();
     }
 
-    public function changeStatus($form_id, $status){
-        return parent::$connection->query("UPDATE employee_req_form SET status = '$status' WHERE id = $form_id");;
+    public function changeStatus($form_id, $status)
+    {
+        return parent::$connection->query("UPDATE employee_req_form SET status = '$status' WHERE id = $form_id");
+        ;
     }
-    public function readAll(){
+    public function readAll()
+    {
         $query = parent::$connection->query("SELECT * FROM employee_req_form ORDER BY id DESC");
         return $query->fetch_all(MYSQLI_ASSOC);
     }
@@ -110,7 +135,7 @@ class EmployeeReqForm extends Connection
     {
         $stmt = parent::$connection->prepare("DELETE FROM $this->details_table WHERE id = ?");
         $stmt->bind_param("i", $form_id);
-        
+
         return $stmt->execute();
     }
 }
