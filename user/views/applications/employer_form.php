@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'occupation' => json_encode($_POST['occupation']),
         'phone' => trim($_POST['phone']),
         'report_receiver' => trim($_POST['report_receiver']),
+        'letter_no' => $_POST['letter_no'] ?? ' - ',
         'user_id' => $_SESSION['user_id']
     ];
 
@@ -49,6 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="phone">Phone Number</label>
             <input type="tel" name="phone" id="phone">
+        </div>
+    </div>
+     <div class="form-row">
+        <div class="form-group">
+            <label for="letter_no">Letter No.</label>
+            <input type="letter_no" name="letter_no" id="letter_no">
         </div>
     </div>
 
