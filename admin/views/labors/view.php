@@ -164,8 +164,15 @@ if (!empty($laborer['images'])) {
     }
 </style>
 
-<h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
+<div>
+    <a href="/labor_application/admin/?vr=labors">
+        <i class="fas fa-arrow-left" style="font-size: 20px;"></i>
+    </a>
+    <h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
+</div>
+
 <form action="" method="POST" enctype="multipart/form-data" novalidate>
+    
     <div style="color: green;"><?= $msg ?? '' ?></div>
     <div style="color: red;"><?= $err ?? '' ?> </div>
     <input type="hidden" name="id" value="<?= (int) $laborer['id'] ?>" id="id">

@@ -7,107 +7,146 @@
     <title>Labor</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
         :root {
-            --bg-color: #ffffff;
-            --sidebar-bg: #f9fafb;
+            --bg-color: #f8fafc;
+            --sidebar-bg: #ffffff;
             --primary-color: #2563eb;
-            --text-color: #374151;
+            --primary-light: #eff6ff;
+            --text-color: #4b5563;
             --text-hover: #1d4ed8;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --border-radius: 12px;
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --border-radius: 8px;
         }
 
         * {
             box-sizing: border-box;
+            
         }
 
         body {
-            margin: 0;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
                 Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
-            max-height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
-        nav {
-
-            background-color: var(--sidebar-bg);
-            width: 220px;
-            max-height: 100vh;
-            padding: 2rem 1.5rem;
-            box-shadow: 2px 0 8px var(--shadow-color);
-            border-radius: 0 12px 12px 0;
-            /* position: sticky; */
-            /* top: 0; */
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
+        /* Sidebar container */
+        nav>*{
             margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: var(--sidebar-bg);
+            width: 240px;
+            padding: 1.5rem 1rem;
+            box-shadow: 2px 0 8px var(--shadow-color);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 2rem;
+            transition: width 0.3s ease;
         }
 
-        nav li {
-           
+        /* Brand/Logo section */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            user-select: none;
+        }
+        
+        .sidebar-brand-icon {
+            color: var(--primary-color);
         }
 
-        nav a {
-            display: block;
-            padding: 0.6rem 1rem;
+        .sidebar-brand:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main navigation list */
+        .sidebar-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Individual list item */
+        .sidebar-nav-list a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
             color: var(--text-color);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 400;
+            font-size: 0.95rem;
             border-radius: var(--border-radius);
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
             user-select: none;
         }
 
-        nav a:hover,
-        nav a:focus-visible {
+        .sidebar-nav-list a:hover,
+        .sidebar-nav-list a:focus-visible {
             color: var(--primary-color);
-            background-color: rgba(37, 99, 235, 0.1);
+            background-color: var(--primary-light);
             outline: none;
-            transform: translateX(4px);
         }
 
-        nav a:focus-visible {
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+        .sidebar-nav-list a.active {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-list a .icon {
+            font-size: 1.25rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-link {
+            margin-top: auto; /* Pushes the logout link to the bottom */
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
         }
 
         main {
+            height: 100vh;
             flex: 1;
             padding: 2rem;
-            max-height: 100vh;
-            overflow: auto;
+            overflow-y: scroll;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
+
+        @media (max-width: 768px) {
             nav {
                 position: fixed;
-                width: 180px;
+                left: -240px;
+                height: 100%;
                 z-index: 1000;
-                height: 100vh;
-                border-radius: 0;
                 box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
                 transform: translateX(0);
                 transition: transform 0.3s ease;
             }
 
-            body {
-                padding-left: 180px;
+            body.sidebar-open nav {
+                transform: translateX(240px);
+            }
+
+            main {
+                margin-left: 0;
             }
         }
     </style>
@@ -116,17 +155,54 @@
 
 <body>
     <nav aria-label="Primary Sidebar Navigation">
-        <ul>
-            <li><a href="<?= BASE_URL.'?vr=dashboard' ?>" style="font-size: 30px; border-bottom: 1px solid black;">Welcome</a></li>
-            <li><a href="<?= BASE_URL.'?vr=dashboard' ?>">Dashboard</a></li>
-            <li><a href="<?= BASE_URL.'?vr=labors' ?>">Laborers</a></li>
-            <li><a href="<?= BASE_URL.'?vr=employer' ?>">Employers</a></li>
-            <li><a href="users.php">Users</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="contact_msg.php">Messages</a></li>
-            <li><a href="about.php">About</a></li>
-            <li><a href="actions/logout.php" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+        <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="sidebar-brand">
+            <i class="fa-solid fa-chart-line sidebar-brand-icon"></i>
+            <span>Labor App</span>
+        </a>
+        <ul class="sidebar-nav-list">
+            <li>
+                <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="active">
+                    <i class="fa-solid fa-house icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL.'?vr=labors' ?>">
+                    <i class="fa-solid fa-user-tie icon"></i>
+                    Laborers
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL.'?vr=employer' ?>">
+                    <i class="fa-solid fa-building icon"></i>
+                    Employers
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL.'?vr=users' ?>">
+                    <i class="fa-solid fa-users icon"></i>
+                    Users
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL.'?vr=messages' ?>">
+                    <i class="fa-solid fa-envelope icon"></i>
+                    Messages
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL.'?vr=about' ?>">
+                    <i class="fa-solid fa-circle-info icon"></i>
+                    About
+                </a>
             </li>
         </ul>
+
+        <div class="logout-link">
+            <a href="actions/logout.php" onclick="return confirm('Are you sure you want to logout?')">
+                <i class="fa-solid fa-arrow-right-from-bracket icon"></i>
+                Logout
+            </a>
+        </div>
     </nav>
     <main>

@@ -6,7 +6,7 @@ define("BASE_URL", '/labor_application/admin');
 $current_path = $_SERVER['REQUEST_URI'];
 $view = isset($_GET['vr']) ? $_GET['vr'] : 'dashboard';
 
-$views = ['dashboard', 'labors', 'employer','about', 'contact', 'account'];
+$views = ['dashboard', 'labors', 'users', 'employer','about', 'contact', 'account'];
 
 if (in_array($view, $views)) {
     $target = BASE_VIEW_PATH . "/$view/index.php";

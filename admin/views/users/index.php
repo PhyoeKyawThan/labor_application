@@ -2,28 +2,31 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-require_once __DIR__ . '/EmployeeReqForm.php';
-$reqModel = new EmployeeReqForm();
-if(isset($_GET['fid'])){
+require_once __DIR__ . '/User.php';
+$userModel = new User();
+if(isset($_GET['uid']) || isset($_GET['fid'])){
     require_once __DIR__.'/view.php';
     exit;
 }
 if(isset($_GET['did'])){
-    $reqModel->deleteForm($_GET['did']);
+    $userModel->delete((int) $_GET['did']);
 }
-$requests = $reqModel->readAll();
+$users = $userModel->readAll();
 if(isset($_GET['s'])){
-    $requests = $reqModel->search($_GET['s']);
+    $users = $userModel->search($_GET['s']);
 }
+
 
 ?>
-<div class="employee-request-container">
-    <h1>Employee Request List</h1>
 
+<div class="user-table-container">
+    <h1>User List</h1>
+
+    <!-- Search Form -->
     <div class="search-form">
-        <form action="" method="GET">
-            <input type="hidden" name="vr" value="employer">
-            <input type="text" name="s" placeholder="Search by name"
+        <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="GET">
+            <input type="hidden" name="vr" value="users">
+            <input type="text" name="s" placeholder="Search by name or email"
                 value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
             <button type="submit">Search</button>
         </form>
@@ -34,34 +37,33 @@ if(isset($_GET['s'])){
             <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Status</th>
-                    <th>Submitted</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Created At</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $no = 0;
-                foreach ($requests as $req):
+                foreach ($users as $user):
                     $no += 1;
                     ?>
                     <tr>
                         <td><?= $no ?></td>
-                        <td><?= htmlspecialchars($req['name']) ?></td>
-                        <td><?= htmlspecialchars($req['position']) ?></td>
-                        <td class="status-cell">
-                            <span class="status-badge status-<?= strtolower(str_replace(' ', '', $req['status'])) ?>">
-                                <?= htmlspecialchars($req['status']) ?>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['email']) ?></td>
+                        <td class="type-cell">
+                            <span class="type-badge type-<?= strtolower($user['type']) ?>">
+                                <?= htmlspecialchars($user['type']) ?>
                             </span>
                         </td>
-                        <td><?= htmlspecialchars($req['submitted_at']) ?></td>
+                        <td><?= htmlspecialchars($user['created_at']) ?></td>
                         <td class="actions">
-                            <a href="?vr=employer&fid=<?= $req['id'] ?>" class="btn view-btn">View</a>
-                            <a href="?vr=employer&did=<?= $req['id'] ?>"
-                                class="btn delete-btn"
-                                onclick="return confirm('Are you sure you want to delete this labor?')">Delete</a>
+                            <a href="?vr=users&uid=<?= $user['id'] ?>&t=<?= $user['type'] == 'employee' ? 'ee' : 'er' ?>" class="btn view-btn">View</a>
+                            <a href="?vr=users&did=<?= $user['id'] ?>" class="btn delete-btn"
+                                onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -69,23 +71,21 @@ if(isset($_GET['s'])){
         </table>
     </div>
 </div>
+
 <style>
     /* General body and container styles */
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f7f9;
-       
+        /* background-color: #f4f7f9;
+        color: #333;
+        margin: 0;
+        padding: 20px; */
     }
 
     h1 {
         color: #1a2a47;
         font-size: 24px;
         margin-bottom: 20px;
-    }
-
-    .employee-request-container {
-        max-width: 1200px;
-        margin: auto;
     }
 
     /* Search Form */
@@ -162,13 +162,13 @@ if(isset($_GET['s'])){
         background-color: #f1f3f5;
         transition: background-color 0.2s;
     }
-
-    /* Status Badges */
-    .status-cell {
+    
+    /* Type Badges */
+    .type-cell {
         font-weight: bold;
     }
-
-    .status-badge {
+    
+    .type-badge {
         display: inline-block;
         padding: 4px 10px;
         border-radius: 20px;
@@ -176,31 +176,16 @@ if(isset($_GET['s'])){
         text-transform: capitalize;
     }
     
-    .status-approved {
+    .type-employee {
         background-color: #d4edda;
         color: #155724;
     }
     
-    .status-pending {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-    
-    .status-rejected {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    
-    .status-departmentapprovel {
+    .type-employer {
         background-color: #cce5ff;
         color: #004085;
     }
 
-    .status-finished {
-        background-color: #e2e3e5;
-        color: #383d41;
-    }
-    
     /* Actions buttons */
     .actions {
         white-space: nowrap;

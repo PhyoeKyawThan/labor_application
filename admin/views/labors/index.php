@@ -6,12 +6,16 @@ if(isset($_GET['lid'])){
     require_once __DIR__.'/view.php';
     exit;
 }
+$applications = $lbModel->getApplications();
+if(isset($_GET['s'])){
+    $applications = $lbModel->search($_GET['s']);
+}
 ?>
 <h1>Laborers List</h1>
 
-<!-- Search Form -->
 <div class="search-form">
     <form action="" method="GET">
+        <input type="hidden" name="vr" value="labors">
         <input type="text" name="s" placeholder="Search by name, NRC, or serial number"
             value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
         <button type="submit">Search</button>
@@ -33,7 +37,7 @@ if(isset($_GET['lid'])){
     <tbody>
         <?php
         $no = 0;
-        foreach ($lbModel->getApplications() as $laborer):
+        foreach ($applications as $laborer):
             $no += 1;
             ?>
             <tr>

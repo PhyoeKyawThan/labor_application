@@ -430,11 +430,11 @@ if (isset($_GET['pf'])) {
                     ?>
                     <tr>
                         <td><?= $d['occupation'] ?></td>
-                        <td><?= $d['occupation'] ?></td>
+                        <td><?= $d['qualification'] ?></td>
                         <td><?= $d['male'] ?></td>
                         <td><?= $d['female'] ?></td>
                         <td><?= $d['qualification'] ?></td>
-                        <td><?= $d['position'] ?></td>
+                        <td><?= $d['working_type_period'] ?? '-' ?></td>
                         <td><?= $d['salary'] ?></td>
                     </tr>
                 <?php endforeach; ?>

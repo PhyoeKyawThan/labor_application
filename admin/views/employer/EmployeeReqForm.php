@@ -76,6 +76,21 @@ class EmployeeReqForm extends Connection
         return $emplyoees;
     }
 
+    public function search($kw)
+    {
+        $kw = '%' . $kw . '%';
+        $stmt = parent::$connection->prepare("
+        SELECT * 
+        FROM employee_req_form
+        WHERE name LIKE ? OR position LIKE ? 
+        ORDER BY id DESC
+    ");
+        $stmt->bind_param('ss', $kw, $kw);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function insertDepartmentApproval($datas)
     {
         $sql = "INSERT INTO department_approval (

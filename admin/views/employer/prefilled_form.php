@@ -15,8 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             (int) $_GET['fid']
         ]);
         if (isset($_POST['correct'])) {
-            if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
-                $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
+            if ($detail['status'] != 'Finished') {
+                if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
+                    $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
+                }
             }
         }
         $detail = $reqModel->readDetails($_GET['fid']);
@@ -27,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 ?>
 <div id="prefill-accepted-form">
-    <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid='.$_GET['fid'] ?>">
+    <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] ?>">
         <i class="fas fa-arrow-left"></i>
     </a>
     <h2>အလုပ်သမား ရှာဖွေရေး ဖောင်</h2>
@@ -67,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="button-container">
             <button type="submit">
-                Request Approval
+            <?= $detail['status'] == 'Department Approvel' ? ' Request Approval' : ($detail['status'] == 'Finished' ? 'View' : ' Request Approval') ?>
             </button>
         </div>
     </form>

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../models/EmployeeReqFormModel.php';
 require_once __DIR__ . '/helpers/drop_datas.php';
-$position_codes = require_once __DIR__.'/../../../commons/position_codes.php';
+$position_codes = require_once __DIR__ . '/../../../commons/position_codes.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $model = new EmployeeReqFormModel();
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="tel" name="phone" id="phone">
         </div>
     </div>
-     <div class="form-row">
+    <div class="form-row">
         <div class="form-group">
             <label for="letter_no">Letter No.</label>
             <input type="text" name="letter_no" id="letter_no">
@@ -69,9 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="occupation-0">Occupation</label>
                     <select name="occupation[0][occupation]" id="occupation-0">
-                        <?php foreach(array_keys($position_codes['employee_codes']) as $position):
-                        ?>
-                        <option value="<?= $position ?>"><?= $position ?></option>
+                        <?php foreach (array_keys($position_codes['employee_codes']) as $position):
+                            ?>
+                            <option value="<?= $position ?>"><?= $position ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -86,18 +86,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="qualification-0">Qualification</label>
                     <!-- <input type="text" name="occupation[0][qualification]" id="qualification-0"> -->
                     <select name="occupation[0][qualification]" id="qualification-0">
-                        <?php foreach($educationLevels as $edu_level):
-                        ?>
-                        <option value="<?= $edu_level ?>"><?= $edu_level ?></option>
+                        <?php foreach ($educationLevels as $edu_level):
+                            ?>
+                            <option value="<?= $edu_level ?>"><?= $edu_level ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="skill-0">Skills</label>
+                <input type="text" name="occupation[0][skill]" id="skill-0">
+            </div>
             <div class="form-row">
-                <!-- <div class="form-group">
-                    <label for="position-0">Position</label>
-                    <input type="text" name="occupation[0][position]" id="position-0">
-                </div> -->
+                <div class="form-group">
+                    <label for="working_type_period-0">Working Type</label>
+                    <input type="text" name="occupation[0][working_type_period]" id="working_type_period-0">
+                </div>
                 <div class="form-group">
                     <label for="salary-0">Salary</label>
                     <input type="text" name="occupation[0][salary]" id="salary-0">

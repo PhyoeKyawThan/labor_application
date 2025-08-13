@@ -32,4 +32,19 @@ class LaborsApplication extends Connection
         }
     }
 
+    public function search($kw)
+    {
+        $kw = '%' . $kw . '%';
+        $stmt = parent::$connection->prepare("
+        SELECT *
+        FROM applications
+        WHERE name LIKE ? OR nrc LIKE ? OR serial_number LIKE ?
+        ORDER BY id DESC
+    ");
+        $stmt->bind_param('sss', $kw, $kw, $kw);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
 }
