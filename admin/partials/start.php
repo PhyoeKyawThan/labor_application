@@ -36,7 +36,7 @@
             overflow: hidden;
         }
 
-        /* Sidebar container */
+
         nav>*{
             margin: 0;
             padding: 0;
@@ -53,7 +53,7 @@
             transition: width 0.3s ease;
         }
 
-        /* Brand/Logo section */
+
         .sidebar-brand {
             display: flex;
             align-items: center;
@@ -74,7 +74,7 @@
             color: var(--primary-color);
         }
 
-        /* Main navigation list */
+ 
         .sidebar-nav-list {
             list-style: none;
             display: flex;
@@ -82,7 +82,6 @@
             gap: 0.5rem;
         }
 
-        /* Individual list item */
         .sidebar-nav-list a {
             display: flex;
             align-items: center;
@@ -117,7 +116,7 @@
         }
 
         .logout-link {
-            margin-top: auto; /* Pushes the logout link to the bottom */
+            margin-top: auto;
             border-top: 1px solid var(--border-color);
             padding-top: 1rem;
         }
@@ -154,49 +153,55 @@
 </head>
 
 <body>
-    <nav aria-label="Primary Sidebar Navigation">
-        <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="sidebar-brand">
-            <i class="fa-solid fa-chart-line sidebar-brand-icon"></i>
-            <span>Labor App</span>
-        </a>
-        <ul class="sidebar-nav-list">
-            <li>
-                <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="active">
-                    <i class="fa-solid fa-house icon"></i>
-                    Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="<?= BASE_URL.'?vr=labors' ?>">
-                    <i class="fa-solid fa-user-tie icon"></i>
-                    Laborers
-                </a>
-            </li>
-            <li>
-                <a href="<?= BASE_URL.'?vr=employer' ?>">
-                    <i class="fa-solid fa-building icon"></i>
-                    Employers
-                </a>
-            </li>
-            <li>
-                <a href="<?= BASE_URL.'?vr=users' ?>">
-                    <i class="fa-solid fa-users icon"></i>
-                    Users
-                </a>
-            </li>
-            <li>
-                <a href="<?= BASE_URL.'?vr=messages' ?>">
-                    <i class="fa-solid fa-envelope icon"></i>
-                    Messages
-                </a>
-            </li>
-            <li>
-                <a href="<?= BASE_URL.'?vr=about' ?>">
-                    <i class="fa-solid fa-circle-info icon"></i>
-                    About
-                </a>
-            </li>
-        </ul>
+    <?php 
+$current = isset($_GET['vr']) ? $_GET['vr'] : 'dashboard';
+?>
+
+<nav aria-label="Primary Sidebar Navigation">
+    <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="sidebar-brand">
+        <i class="fa-solid fa-chart-line sidebar-brand-icon"></i>
+        <span>Labor App</span>
+    </a>
+    <ul class="sidebar-nav-list">
+        <li>
+            <a href="<?= BASE_URL.'?vr=dashboard' ?>" class="<?= $current === 'dashboard' ? 'active' : '' ?>">
+                <i class="fa-solid fa-house icon"></i>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="<?= BASE_URL.'?vr=labors' ?>" class="<?= $current === 'labors' ? 'active' : '' ?>">
+                <i class="fa-solid fa-user-tie icon"></i>
+                Laborers
+            </a>
+        </li>
+        <li>
+            <a href="<?= BASE_URL.'?vr=employer' ?>" class="<?= $current === 'employer' ? 'active' : '' ?>">
+                <i class="fa-solid fa-building icon"></i>
+                Employers
+            </a>
+        </li>
+        <li>
+            <a href="<?= BASE_URL.'?vr=users' ?>" class="<?= $current === 'users' ? 'active' : '' ?>">
+                <i class="fa-solid fa-users icon"></i>
+                Users
+            </a>
+        </li>
+        <li>
+            <a href="<?= BASE_URL.'?vr=messages' ?>" class="<?= $current === 'messages' ? 'active' : '' ?>">
+                <i class="fa-solid fa-envelope icon"></i>
+                Messages
+            </a>
+        </li>
+        <li>
+            <a href="<?= BASE_URL.'?vr=about' ?>" class="<?= $current === 'about' ? 'active' : '' ?>">
+                <i class="fa-solid fa-circle-info icon"></i>
+                About
+            </a>
+        </li>
+    </ul>
+</nav>
+
 
         <div class="logout-link">
             <a href="actions/logout.php" onclick="return confirm('Are you sure you want to logout?')">

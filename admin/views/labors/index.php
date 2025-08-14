@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/LaborsApplication.php';
 $lbModel = new LaborsApplication();
 if(isset($_GET['lid'])){

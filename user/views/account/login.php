@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
 
-        header("Location: /labor_application/user/?vr=account&msg=Login Success!");
+        echo "<script>window.location.href = '/labor_application/user/?vr=account&msg=Login Success!'</script>";
         exit;
     }
 

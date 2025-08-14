@@ -165,14 +165,14 @@ if (!empty($laborer['images'])) {
 </style>
 
 <div>
-    <a href="/labor_application/admin/?vr=labors">
+    <a href="<?= $_GET['fURL'] ?? "/labor_application/admin/?vr=labors" ?>">
         <i class="fas fa-arrow-left" style="font-size: 20px;"></i>
     </a>
     <h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
 </div>
 
 <form action="" method="POST" enctype="multipart/form-data" novalidate>
-    
+
     <div style="color: green;"><?= $msg ?? '' ?></div>
     <div style="color: red;"><?= $err ?? '' ?> </div>
     <input type="hidden" name="id" value="<?= (int) $laborer['id'] ?>" id="id">
@@ -266,6 +266,10 @@ if (!empty($laborer['images'])) {
             <option value="Pending" <?= $laborer['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
             <option value="Rejected" <?= $laborer['status'] === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
         </select>
+    </div>
+    <div class="full-width">
+        <a href="<?= BASE_URL . '/views/labors/preview_card.php?sn=' . $laborer['serial_number'] . '&uid=' . $laborer['user_id'] ?>"
+            target="_blank">Preview</a>
     </div>
     <div class="full-width">
         <label for="message">Message for registerer</label>

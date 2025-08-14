@@ -1,81 +1,140 @@
+<?php
+// Database connection
+$conn = new mysqli("localhost", "root", "", "lrdb");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
+// Applications status count
+$app_query = "
+    SELECT status, COUNT(*) as total 
+    FROM applications 
+    GROUP BY status
+";
+$app_result = $conn->query($app_query);
+$app_labels = [];
+$app_counts = [];
+$app_colors = [];
+
+while ($row = $app_result->fetch_assoc()) {
+    $app_labels[] = $row['status'];
+    $app_counts[] = $row['total'];
+
+    // Assign colors per status
+    switch ($row['status']) {
+        case 'Approved':
+            $app_colors[] = '#4CAF50'; // green
+            break;
+        case 'Pending':
+            $app_colors[] = '#FFC107'; // amber
+            break;
+        case 'Rejected':
+            $app_colors[] = '#F44336'; // red
+            break;
+        default:
+            $app_colors[] = '#9E9E9E'; // grey
+    }
+}
+
+// Employee request form status count
+$emp_query = "
+    SELECT status, COUNT(*) as total 
+    FROM employee_req_form 
+    GROUP BY status
+";
+$emp_result = $conn->query($emp_query);
+$emp_labels = [];
+$emp_counts = [];
+$emp_colors = [];
+
+while ($row = $emp_result->fetch_assoc()) {
+    $emp_labels[] = $row['status'];
+    $emp_counts[] = $row['total'];
+
+    // Assign colors per status
+    switch ($row['status']) {
+        case 'Pending':
+            $emp_colors[] = '#FFC107';
+            break;
+        case 'Department Approvel':
+            $emp_colors[] = '#03A9F4'; // blue
+            break;
+        case 'Rejected':
+            $emp_colors[] = '#F44336';
+            break;
+        case 'Finished':
+            $emp_colors[] = '#4CAF50';
+            break;
+        default:
+            $emp_colors[] = '#9E9E9E';
+    }
+}
+
+$conn->close();
+?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     .dashboard {
-        display: flex;
-        justify-content: space-between; 
-        align-items: flex-start; 
-        flex-wrap: wrap;
-        padding: 2rem;
-        gap: 2rem; 
-        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
     }
 
-    .dashboard > div {
-        background-color: var(--sidebar-bg); 
-        border-radius: var(--border-radius);
-        padding: 1.5rem;
-        box-shadow: 0 2px 8px var(--shadow-color);
-        flex: 1; 
-        min-width: 250px; 
-        max-width: 300px;
-        transition: transform 0.2s; 
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 20px;
     }
 
-    .dashboard > div:hover {
-        transform: scale(1.02);
-    }
-
-    .dashboard h2 {
-        color: var(--primary-color); 
-        margin-bottom: 1rem; 
-    }
-
-    .dashboard p {
-        margin: 0.5rem 0; 
-        color: var(--text-color); 
-        font-size: 1rem; 
-    }
-
-    .dashboard span {
-        font-weight: bold;
-        color: var(--text-hover); 
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-        .dashboard {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .dashboard > div {
-            max-width: 100%; 
-        }
+    .chart-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.2rem;
     }
 </style>
-<h1>Dashboard</h1>
+
+
+<h1>📊 Dashboard Overview</h1>
 <div class="dashboard">
-    <div>
-        <h2>Contact Messages</h2>
-        <p>Total Messages: <span id="total-messages"><?php// echo $total_messages; ?></span></p>
-        <p>Replied Messages: <span id="replied-messages"><?php// echo $replied_messages; ?></span></p>
-        <p>Unreplied Messages: <span id="unreplied-messages"><?php// echo $unreplied_messages; ?></span></p>
-        <p>Latest Message: <span id="latest-message"><?php// echo $latest_message_display; ?></span></p>
+    <div class="chart-card">
+        <h3>Applications Status</h3>
+        <canvas id="applicationsChart"></canvas>
     </div>
-    <div>
-        <h2>Labors</h2>
-        <p>Total Laborers: <span id="total-laborers"><?php// echo $total_laborers; ?></span></p>
-        <p>Approved Laborers: <span id="approved-laborers"><?php// echo $approved_laborers; ?></span></p>
-        <p>Pending Applications: <span id="pending-applications"><?php// echo $pending_laborers; ?></span></p>
-        <p>Rejected Applications: <span id="rejected-applications"><?php// echo $rejected_laborers; ?></span></p>
-        <p>Latest Laborer: <span id="latest-laborer"><?php// echo $latest_laborer_display; ?></span></p>
-    </div>
-    <div>
-        <h2>Users</h2>
-        <p>Total Users: <span id="total-users"><?php// echo $total_users; ?></span></p>
-        <p>Labor Users: <span id="labor-users"><?php// echo $labor_users; ?></span></p>
-        <p>Non-Labor Users: <span id="non-labor-users"><?php// echo $non_labor_users; ?></span></p>
-        <p>Latest User: <span id="latest-user"><?php// echo $latest_user_display; ?></span></p>
+    <div class="chart-card">
+        <h3>Employee Requests Status</h3>
+        <canvas id="employeeReqChart"></canvas>
     </div>
 </div>
 
+<script>
+
+    new Chart(document.getElementById('applicationsChart'), {
+        type: 'pie',
+        data: {
+            labels: <?= json_encode($app_labels) ?>,
+            datasets: [{
+                data: <?= json_encode($app_counts) ?>,
+                backgroundColor: <?= json_encode($app_colors) ?>
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    new Chart(document.getElementById('employeeReqChart'), {
+        type: 'pie',
+        data: {
+            labels: <?= json_encode($emp_labels) ?>,
+            datasets: [{
+                data: <?= json_encode($emp_counts) ?>,
+                backgroundColor: <?= json_encode($emp_colors) ?>
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
