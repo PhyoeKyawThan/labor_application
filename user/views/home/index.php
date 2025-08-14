@@ -77,10 +77,10 @@
 </style>
 <main>
     <div id="banners" role="region" aria-label="Banner slideshow">
-        <img src="/labor-register/static/images/photo_2025-06-07_23-26-13.jpg" alt="" srcset="">
-        <img src="/labor-register/static/images/photo_2025-06-07_23-26-05.jpg" alt="" srcset="">
-        <img src="/labor-register/static/images/photo_2025-06-07_23-26-09.jpg" alt="" srcset="">
-        <img src="/labor-register/static/images/photo_2025-06-07_23-26-17.jpg" alt="" srcset="">
+        <img src="/labor_application/static/images/photo_2025-06-07_23-26-13.jpg" alt="" srcset="">
+        <img src="/labor_application/static/images/photo_2025-06-07_23-26-05.jpg" alt="" srcset="">
+        <img src="/labor_application/static/images/photo_2025-06-07_23-26-09.jpg" alt="" srcset="">
+        <img src="/labor_application/static/images/photo_2025-06-07_23-26-17.jpg" alt="" srcset="">
         <div id="dots" aria-label="Slideshow navigation"></div>
     </div>
     <div id="home-content">

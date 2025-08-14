@@ -120,7 +120,7 @@
 <header>
     <div class="header-container">
         <div class="header-left">
-            <img src="/labor-register/static/images/output-onlinepngtools.png" alt="">
+            <img src="/labor_application/static/images/output-onlinepngtools.png" alt="">
             <h1>အလုပ်သမားဝန်ကြီးဌာန</h1>
         </div>
         <button class="menu-toggle" onclick="toggleMenu()">
