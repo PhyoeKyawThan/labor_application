@@ -190,6 +190,12 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 </a>
             </li>
             <li>
+                <a href="<?= BASE_URL . '?vr=report' ?>" class="<?= $current === 'report' ? 'active' : '' ?>">
+                    <i class="fa-solid fa-list icon"></i>
+                    Report
+                </a>
+            </li>
+            <li>
                 <a href="<?= BASE_URL . '?vr=users' ?>" class="<?= $current === 'users' ? 'active' : '' ?>">
                     <i class="fa-solid fa-users icon"></i>
                     Users

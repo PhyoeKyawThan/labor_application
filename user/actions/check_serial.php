@@ -13,11 +13,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     require_once __DIR__.'/../models/ApplicationModel.php';
     $applicationModel = new ApplicationModel();
-    $application = $applicationModel->check_serial($serial_number);
-    if(!isset($application['id'])){
+    $is_exist = $applicationModel->check_serial($serial_number);
+    if(!$is_exist){
         echo json_encode([
             "status" => false,
-            "msg" => "Sorry employee with this serial number not found!",
+            "msg" => "Sorry employee with this serial number not found or already employed!",
         ]);
         exit;
     }
