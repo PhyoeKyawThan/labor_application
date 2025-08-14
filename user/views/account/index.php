@@ -193,14 +193,19 @@ $application = $model->getApplication($_SESSION['user_id'], $_SESSION['type']);
                 <?php if ($application['status'] == 'Department Approvel'):
                     $_SESSION['app_id'] = $application['id']; ?>
                     <div><i class="fas fa-check-circle"></i> View Approval:
-                        <a href="<?= BASE_URL . '/views/approval/' ?>">
+                        <a
+                        href="#"
+                            onclick="window.open('<?= BASE_URL . '/views/approval/' ?>', 'Confirmation Form', 'width=1000,height=700,scrollbars=yes,resizable=yes'); return false;">
                             <i class="fas fa-eye"></i> Approval Confirmation
                         </a>
                     </div>
                 <?php endif; ?>
                 <?php if ($application['status'] == 'Finished'): ?>
                     <div><i class="fas fa-id-card-alt"></i> Get Employed Cards:
-                        <a href="<?= BASE_URL . '/views/cards/employed_card.php' ?>" target="_blank"><i class="fas fa-list"></i> Click here to get employee cards</a>
+                        <a href="#"
+                            onclick="window.open('<?= BASE_URL . '/views/cards/employed_card.php' ?>', 'EmployeeCards', 'width=1000,height=700,scrollbars=yes,resizable=yes'); return false;">
+                            <i class="fas fa-list"></i> Click here to get employee cards
+                        </a>
                     </div>
                 <?php endif; ?>
                 <?php if (!empty($application['message'])): ?>

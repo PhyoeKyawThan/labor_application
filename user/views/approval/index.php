@@ -3,22 +3,22 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-if(!isset($_SESSION['app_id']) && !isset($_SESSION['user_id'])){
+if (!isset($_SESSION['app_id']) && !isset($_SESSION['user_id'])) {
     die("Require information");
 }
 
 $form_id = $_SESSION['app_id'];
 $user_id = $_SESSION['user_id'];
 
-require __DIR__.'/../../../admin/views/employer/EmployeeReqForm.php';
-require __DIR__.'/../../../commons/DateConverter.php';
+require __DIR__ . '/../../../admin/views/employer/EmployeeReqForm.php';
+require __DIR__ . '/../../../commons/DateConverter.php';
 $reqModel = new EmployeeReqForm();
 
 $detail = $reqModel->readDetails($form_id);
 $occupation = json_decode($detail['occupation'], true)[0];
-if(isset($_GET['confirm'])){
-    if($reqModel->changeStatus($form_id, 'Finished')){
-        header("Location: /labor_application/user/?vr=account");
+if (isset($_GET['confirm'])) {
+    if ($reqModel->changeStatus($form_id, 'Finished')) {
+        echo "<script>window.close()</script>";
         exit;
     }
 }
@@ -184,18 +184,28 @@ if(isset($_GET['confirm'])){
 
 <body>
 
-    <div class="controls-container">
-        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2&pf=true' ?>">
-            <i class="fas fa-arrow-left"></i>
+    <div
+        style="display: flex; align-items: center; justify-content: space-between; background-color: #f3f4f6; padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 1rem;">
+
+        <a onclick="window.close()"
+            style="text-decoration: none; color: #3b82f6; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <i class="fas fa-arrow-left"></i> Back
         </a>
-        <h2>Confirmation</h2>
-        <div display="flex">
-            <a href="?confirm=true">
-                Confirm
+
+        <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">Confirmation</h2>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="?confirm=true"
+                style="">
+                <button style="background-color: #22c55e; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;">Confirm</button>
             </a>
-            <button onclick="downloadTwoPagePdf()">View as Pdf</button>
+            <button onclick="downloadTwoPagePdf()"
+                style="background-color: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                View as PDF
+            </button>
         </div>
     </div>
+
 
     <!-- First Page -->
     <div class="a4-container">
