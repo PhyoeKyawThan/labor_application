@@ -8,6 +8,8 @@
         require 'employer_form.php';
     } else if (isset($_GET['rj'])) {
         require 'employee_rejected.php';
+    }else if(isset($_GET['rje'])){
+        require 'employer_rejected.php';
     } else {
         require 'details.php';
     }

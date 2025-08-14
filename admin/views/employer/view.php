@@ -355,7 +355,7 @@ if (isset($_GET['pf'])) {
             ?>
             <div class="data-card">
                 <div class="card-item"><span class="card-item-label">Position:</span> <?= $d['occupation'] ?></div>
-                <div class="card-item"><span class="card-item-label">Skill:</span> <?= $d['qualification'] ?></div>
+                <div class="card-item"><span class="card-item-label">Skill:</span> <?= $d['skill'] ?></div>
                 <div class="card-item"><span class="card-item-label">Required Male Count:</span> <?= $d['male'] ?></div>
                 <div class="card-item"><span class="card-item-label">Required Female Count:</span> <?= $d['female'] ?></div>
                 <div class="card-item"><span class="card-item-label">Qualification:</span> <?= $d['qualification'] ?></div>

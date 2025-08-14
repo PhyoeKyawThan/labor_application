@@ -108,7 +108,7 @@
             $s = $status['status'];
             if (!$status['is_resubmit']):
                 ?>
-                <a href="<?= $s == 'Rejected' ? '?vr=applications&rj=' : '' ?>" class="<?= $s == 'Rejected' ? 'rejected' :
+                <a href="<?= $s == 'Rejected' ? '?vr=applications&'.( $_SESSION['type'] == 'employee' ? 'rj=' : 'rje=') : '' ?>" class="<?= $s == 'Rejected' ? 'rejected' :
                             ($s == 'Pending' ? 'pending' : 'success') ?>">Your application Status: <?= $s ?></a>
             <?php else: ?>
                 <p class="pending">Your Resubmitted Application is checking underway..</p>

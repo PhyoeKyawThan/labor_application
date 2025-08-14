@@ -53,6 +53,13 @@ class EmployeeReqFormModel extends Connection
         return $stmt->get_result()->fetch_assoc();
     }
 
+    public function readFormById($user_id){
+        $stmt = parent::$connection->prepare("SELECT * FROM $this->details_table WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
     public function readEmployeeNumbers($form_id)
     {
         $stmt = parent::$connection->prepare("SELECT serial_number FROM $this->numbers_table WHERE form_id = ?");
