@@ -88,7 +88,6 @@ $occupation =json_decode( $form['occupation'], true)[0];
                 </div>
                 <div class="form-group">
                     <label for="qualification-0">Qualification</label>
-                    <!-- <input type="text" name="occupation[0][qualification]" id="qualification-0"> -->
                     <select name="occupation[0][qualification]" id="qualification-0">
                         <?php foreach ($educationLevels as $edu_level):
                             ?>
@@ -99,7 +98,7 @@ $occupation =json_decode( $form['occupation'], true)[0];
             </div>
             <div class="form-group">
                 <label for="skill-0">Skills</label>
-                <input type="text" name="occupation[0][skill]" id="skill-0">
+                <input type="text" name="occupation[0][skill]" <?= $occupation['skill'] ?> id="skill-0">
             </div>
             <div class="form-row">
                 <div class="form-group">

@@ -430,7 +430,7 @@ if (isset($_GET['pf'])) {
                     ?>
                     <tr>
                         <td><?= $d['occupation'] ?></td>
-                        <td><?= $d['qualification'] ?></td>
+                        <td><?= $d['skill'] ?></td>
                         <td><?= $d['male'] ?></td>
                         <td><?= $d['female'] ?></td>
                         <td><?= $d['qualification'] ?></td>
