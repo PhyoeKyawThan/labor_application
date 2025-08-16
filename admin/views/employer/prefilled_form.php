@@ -1,26 +1,19 @@
 <?php
 
 $occupation = isset($detail) ? json_decode($detail['occupation'], true)[0] : null;
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
     if (isset($_GET['pa'])) {
-        $to = $_POST['to'];
-        $department = $_POST['department'];
-        $date = $_POST['date'];
-        $letter_no = $_POST['letter_no'];
-        $position = $_POST['position'];
+        $to = $_GET['to'];
+        $department = $_GET['department'];
+        $date = $_GET['date'];
+        $letter_no = $_GET['letter_no'];
+        $position = $_GET['position'];
         $reqModel->insertDepartmentApproval([
             $to,
             $department,
             $date,
             (int) $_GET['fid']
         ]);
-        if (isset($_POST['correct'])) {
-            if ($detail['status'] != 'Finished') {
-                if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
-                    $red_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=2';
-                }
-            }
-        }
         $detail = $reqModel->readDetails($_GET['fid']);
         require_once __DIR__ . '/accepted_form.php';
         exit;
@@ -33,8 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <i class="fas fa-arrow-left"></i>
     </a>
     <h2>အလုပ်သမား ရှာဖွေရေး ဖောင်</h2>
-    <form action="<?= $_SERVER['REQUEST_URI'] ?>&pa=true" method="post">
-        <input type="hidden" name="correct" value="true">
+    <form action="" method="get">
+        <input type="hidden" name="vr" value="employer">
+        <input type="hidden" name="fid" value="<?= $_GET['fid'] ?>">
+        <input type="hidden" name="pf" value="true">
+        <input type="hidden" name="accept" value="true">
+        <input type="hidden" name="pa" value="true">
         <div>
             <label for="to-line-3">သို့:</label>
             <textarea type="text" name="to" id="to-3" placeholder="မည်သူ့ထံသို့"><?= $detail['toDeliver'] ?></textarea>
@@ -69,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="button-container">
             <button type="submit">
-            <?= $detail['status'] == 'Department Approvel' ? ' Request Approval' : ($detail['status'] == 'Finished' ? 'View' : ' Request Approval') ?>
+                <?= $detail['status'] == 'Department Approvel' ? ' Request Approval' : ($detail['status'] == 'Finished' ? 'View' : ' Request Approval') ?>
             </button>
         </div>
     </form>

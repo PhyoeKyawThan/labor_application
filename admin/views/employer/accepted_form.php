@@ -157,10 +157,27 @@
         }
     </style>
 </head>
+<?php
+if (isset($_GET['correct'])) {
+    if ($detail['status'] != 'Finished') {
+        if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
+            $url = $_SERVER['REQUEST_URI'];
+            $parts = parse_url($url);
+            parse_str($parts['query'] ?? '', $queryParams);
+            unset($queryParams['correct']);
+            $newQuery = http_build_query($queryParams);
+            $red_url = $parts['path'] . ($newQuery ? '?' . $newQuery : '');
+            echo "<script> window.location.href = '$red_url'</script>";
+            exit;
+        }
+    }
+}
+?>
 
 <body>
     <div class="controls-container">
-        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid='.$_GET['fid'].'&pf=true' ?>">
+        <a
+            href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] . '' ?>">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2>Preview</h2>
@@ -168,10 +185,10 @@
             <button style="background-color: green;"
                 onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&correct=true'"><i
                     class="fas fa-mark"></i><?= $detail['status'] ?></button>
-            
-            <!-- <button style="background-color: green;"
-                onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&incorrectcorrect=true'"><i
-                    class="fas fa-mark"></i>Incorrect</button> -->
+            <button
+                onclick="window.open('/labor_application/user/views/cards/employed_card.php?app_id=<?= $detail['id'] ?>&uid=<?= $detail['uid'] ?>', 'EmployeeCards', 'width=1000,height=700,scrollbars=yes,resizable=yes'); return false;">
+                <i class="fas fa-list"></i> Employee cards Preview
+            </button>
             <button onclick="downloadTwoPagePdf()">View as Pdf</button>
         </div>
         <!-- <button onclick="window.print()">Print</button> -->

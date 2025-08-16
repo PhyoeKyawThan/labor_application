@@ -44,7 +44,9 @@ class EmployeeReqForm extends Connection
 
     public function readDetails($form_id)
     {
-        $stmt = parent::$connection->prepare("SELECT r.*, da.toDeliver, da.approval_req_date FROM $this->details_table as r LEFT JOIN department_approval as da ON da.employee_req_id = r.id WHERE r.id = ?");
+        $stmt = parent::$connection->prepare("
+        SELECT r.*, da.toDeliver, da.approval_req_date, u.id as uid FROM $this->details_table as r JOIN users as u ON u.id = r.user_id
+        LEFT JOIN department_approval as da ON da.employee_req_id = r.id WHERE r.id = ?");
         $stmt->bind_param("i", $form_id);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();

@@ -1,7 +1,7 @@
 <?php
 session_start();
-$form_id = $_SESSION['app_id'];
-$user_id = $_SESSION['user_id'];
+$form_id = $_SESSION['app_id'] ?? $_GET['app_id'] ?? die("Information Invalid");
+$user_id = $_SESSION['user_id'] ?? $_GET['uid'] ?? die("Information Invalid");
 
 require __DIR__ . '/../../../admin/views/employer/EmployeeReqForm.php';
 require __DIR__ . '/../../../commons/DateConverter.php';
@@ -46,7 +46,7 @@ foreach ($employees as $emp):
         <div class="stamp">
             <img src="/labor_application/importants/stamp_.png" alt="" srcset="">
         </div>
-        <a href="#" class="download-button" onclick="downloadCard('employed-card-<?= $emp['nrc'] ?>')">Download PDF</a>
+        <a href="#" class="download-button" onclick="downloadCard('employed-card-<?= $emp['nrc'] ?>')">Print</a>
     </div>
 <?php endforeach; ?>
 </div>
