@@ -3,51 +3,26 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-// This is a placeholder for your database connection logic,
-// configured with your actual database credentials.
-class DatabaseConnection {
-    public static $connection;
-
-    public static function connect() {
-        if (self::$connection === null) {
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "lrdb";
-
-            // Create connection
-            self::$connection = new mysqli($servername, $username, $password, $dbname);
-
-            // Check connection
-            if (self::$connection->connect_error) {
-                die("Connection failed: " . self::$connection->connect_error);
-            }
-        }
-        return self::$connection;
-    }
-}
-
-// Placeholder for your mail_to_generator.php functionality
-function generateMailtoLink($email, $name, $subject, $message, $reply) {
+function generateMailtoLink($email, $name, $subject, $message, $reply)
+{
     $fullSubject = urlencode("RE: " . $subject);
     $fullBody = urlencode("Dear " . $name . ",\n\n" . $reply . "\n\nOriginal message:\n" . $message);
-    return "<a href='mailto:".htmlspecialchars($email)."?subject=".$fullSubject."&body=".$fullBody."' target='_blank'>Send Reply</a>";
+    return "<a href='mailto:" . htmlspecialchars($email) . "?subject=" . $fullSubject . "&body=" . $fullBody . "' target='_blank' class='btn email-btn'>Send Email</a>";
 }
 
-// Establish the database connection
-$conn = DatabaseConnection::connect();
 
-// Handle delete action
+$db = new Connection();
+$conn = $db->get_connection();
+
 if (isset($_GET["del"])) {
     $del_query = "DELETE FROM contact_msg WHERE id = ?";
     $del_query = $conn->prepare($del_query);
     $del_query->bind_param('i', $_GET['del']);
     $del_query->execute();
-    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?')); // Redirect to remove query string
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
     exit();
 }
 
-// Handle reply action
 $reply_sent = false;
 $mailto_link = '';
 if (isset($_POST['do-reply'])) {
@@ -61,132 +36,145 @@ if (isset($_POST['do-reply'])) {
     $mailto_link = generateMailtoLink($_POST['reply-email'], $_POST['reply-name'], $_POST['reply-subject'], $_POST['message'], $replyMsg);
 }
 
-// Query for fetching messages
 $query = "SELECT * FROM contact_msg ORDER BY submitted_at DESC";
-$result = $conn->query($query);
+
+if (isset($_GET['s']) && !empty($_GET['s'])) {
+    $search_term = "%" . $_GET['s'] . "%";
+    $query = "SELECT * FROM contact_msg WHERE name LIKE ? OR email LIKE ? OR subject LIKE ? ORDER BY submitted_at DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('sss', $search_term, $search_term, $search_term);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $result = $conn->query($query);
+}
+
 $messages = $result->fetch_all(MYSQLI_ASSOC);
 
 $conn->close();
 
 ?>
-<div class="messages-container">
+
+<div class="main-container">
     <div class="header">
-        <h1>Messages</h1>
+        <h1>Message Management</h1>
     </div>
 
-    <!-- Search Form -->
-    <div class="search-form">
-        <form action="" method="GET">
+    <div class="search-form-container">
+        <form action="" method="GET" class="search-form">
             <input type="text" name="s" placeholder="Search by name, email, or subject"
                 value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
-            <button type="submit">Search</button>
+            <button type="submit" class="btn search-btn">Search</button>
         </form>
+        <a href="<?= $_SERVER['REQUEST_URI'] ?>" class="btn reset-btn">Reload</a>
     </div>
 
     <?php if ($reply_sent): ?>
-    <div class="alert-box success">
-        <p>Reply saved. Click the link below to send your reply via your email client.</p>
-        <?= $mailto_link ?>
-    </div>
+        <div class="alert-box success">
+            <p>Reply saved. Click the button below to send your reply via your email client.</p>
+            <?= $mailto_link ?>
+        </div>
     <?php endif; ?>
 
-    <div class="card-list">
-        <?php if (!empty($messages)): ?>
-        <?php foreach ($messages as $message): ?>
-            <div class="card message-card">
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <span class="label">Name:</span>
-                        <span class="value"><?= htmlspecialchars($message['name']); ?></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Email:</span>
-                        <span class="value"><?= htmlspecialchars($message['email']); ?></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Subject:</span>
-                        <span class="value"><?= htmlspecialchars($message['subject']); ?></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Submitted At:</span>
-                        <span class="value"><?= htmlspecialchars($message['submitted_at']); ?></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Replied:</span>
-                        <span class="value status-badge status-<?= $message['replied'] ? 'yes' : 'no' ?>">
-                            <?= $message['replied'] ? 'Yes' : 'No' ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="actions">
-                    <button class="button reply-button" onclick='showReplyModal(<?= json_encode($message) ?>)'>Reply</button>
-                    <a href="?del=<?= $message['id'] ?>" class="button delete-button"
-                        onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-        <?php else: ?>
-            <div class="alert-box">No messages found.</div>
-        <?php endif; ?>
+    <div class="message-list-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Submitted At</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Replied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($messages)): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <tr>
+                            <td class="table-cell"><?= htmlspecialchars($message['submitted_at']); ?></td>
+                            <td class="table-cell"><?= htmlspecialchars($message['name']); ?></td>
+                            <td class="table-cell"><?= htmlspecialchars($message['email']); ?></td>
+                            <td class="table-cell"><?= htmlspecialchars($message['subject']); ?></td>
+                            <td class="table-cell">
+                                <span class="status-badge status-<?= $message['replied'] ? 'yes' : 'no' ?>">
+                                    <?= $message['replied'] ? 'Yes' : 'No' ?>
+                                </span>
+                            </td>
+                            <td class="table-actions">
+                                <button class="btn view-btn"
+                                    onclick='showReplyModal(<?= json_encode($message) ?>)'>View</button>
+                                <a href="?del=<?= $message['id'] ?>" class="btn delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="no-messages">No messages found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<!-- The Modal -->
 <div id="replyModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Reply to Message</h2>
+        <span class="close-btn">&times;</span>
+        <h2>View & Reply</h2>
         <form action="" method="post">
             <input type="hidden" id="reply-id" name="reply-id">
             <input type="hidden" id="reply-name" name="reply-name">
             <input type="hidden" id="reply-email" name="reply-email">
             <input type="hidden" id="reply-subject" name="reply-subject">
             <input type="hidden" id="message" name="message">
-            
+
             <div class="modal-info">
                 <p><strong>Name:</strong> <span id="modal-name"></span></p>
                 <p><strong>Email:</strong> <span id="modal-email"></span></p>
                 <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
-                <p><strong>Message:</strong> <span id="modal-message"></span></p>
+            </div>
+
+            <div class="message-display">
+                <p><strong>Message:</strong></p>
+                <p id="modal-message"></p>
             </div>
 
             <label for="reply_msg">Your Reply:</label>
             <textarea name="reply_msg" id="reply_msg" required></textarea>
 
-            <button type="submit" name="do-reply">Save and Generate Email</button>
+            <button type="submit" name="do-reply" class="btn save-btn">Save & Generate Email</button>
         </form>
     </div>
 </div>
 
 <script>
-    // Function to show the modal
     function showReplyModal(data) {
         var modal = document.getElementById("replyModal");
-        
+
         document.getElementById("reply-id").value = data.id;
         document.getElementById("reply-name").value = data.name;
         document.getElementById("reply-email").value = data.email;
         document.getElementById("reply-subject").value = data.subject;
         document.getElementById("message").value = data.message;
-        
+
         document.getElementById("modal-name").textContent = data.name;
         document.getElementById("modal-email").textContent = data.email;
         document.getElementById("modal-subject").textContent = data.subject;
         document.getElementById("modal-message").textContent = data.message;
-        
+
         document.getElementById("reply_msg").value = data.reply_msg || "";
-        
+
         modal.style.display = "flex";
     }
 
-    // Close the modal
-    var span = document.getElementsByClassName("close")[0];
-    span.onclick = function () {
+    var closeBtn = document.getElementsByClassName("close-btn")[0];
+    closeBtn.onclick = function () {
         var modal = document.getElementById("replyModal");
         modal.style.display = "none";
     }
 
-    // Close the modal if the user clicks outside of it
     window.onclick = function (event) {
         var modal = document.getElementById("replyModal");
         if (event.target == modal) {
@@ -199,21 +187,20 @@ $conn->close();
     /* General body and container styles */
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f7f9;
+        /* background-color: #f4f7f9;
         color: #333;
         margin: 0;
-        padding: 20px;
+        padding: 20px; */
     }
 
-    .messages-container {
-        max-width: 900px;
+    .main-container {
+        max-width: 1000px;
         margin: auto;
-        padding: 20px;
     }
 
     .header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
     .header h1 {
@@ -222,90 +209,146 @@ $conn->close();
         margin: 0;
     }
 
-    .search-form {
+    .search-form-container {
         display: flex;
-        justify-content: center;
-        margin-bottom: 25px;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form,
+    .reset-btn {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
     }
 
     .search-form input[type="text"] {
-        padding: 12px;
-        width: 350px;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px 0 0 8px;
-        font-size: 16px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 300px;
         transition: border-color 0.3s;
     }
 
     .search-form input[type="text"]:focus {
+        border-color: #007bff;
         outline: none;
-        border-color: #3b82f6;
     }
-    
+
     .search-form button {
-        padding: 12px 20px;
-        background-color: #3b82f6;
+        background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 0 8px 8px 0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
         cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s;
     }
 
     .search-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .search-form {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-form input[type="text"] {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 300px;
+        transition: border-color 0.3s;
+    }
+
+    .search-form input[type="text"]:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .search-form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .search-btn:hover {
         background-color: #2563eb;
     }
 
-    .card-list {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+    .reset-btn {
+        background-color: #e2e8f0;
+        color: #555;
+        border-radius: 8px;
     }
 
-    .card {
+    .reset-btn:hover {
+        background-color: #cbd5e1;
+    }
+
+    /* Message list table */
+    .message-list-container {
+        overflow-x: auto;
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        padding: 20px;
     }
 
-    .message-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .details-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        flex-grow: 1;
-    }
-    
-    .detail-item {
-        display: flex;
-        flex-direction: column;
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
     }
 
-    .detail-item .label {
+    thead th {
+        background-color: #f8f9fa;
+        text-align: left;
+        padding: 15px;
         font-weight: 600;
         color: #555;
-        margin-bottom: 4px;
-    }
-    
-    .detail-item .value {
-        font-size: 15px;
-        color: #333;
+        border-bottom: 2px solid #e9ecef;
     }
 
-    .actions {
-        display: flex;
-        gap: 10px;
-        margin-left: 20px;
+    tbody tr:hover {
+        background-color: #f1f3f5;
     }
 
-    .button {
+    .table-cell {
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+        word-break: break-word;
+    }
+
+    .table-actions {
+        white-space: nowrap;
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .no-messages {
+        text-align: center;
+        padding: 30px 15px;
+        color: #777;
+    }
+
+    /* Buttons */
+    .btn {
         padding: 10px 15px;
         border-radius: 6px;
         text-decoration: none;
@@ -315,24 +358,36 @@ $conn->close();
         transition: background-color 0.3s, color 0.3s;
     }
 
-    .reply-button {
-        background-color: #3b82f6;
-        color: white;
-    }
-    
-    .reply-button:hover {
-        background-color: #2563eb;
-    }
-    
-    .delete-button {
-        background-color: #f87171;
-        color: white;
+    .view-btn {
+        background-color: #28a745;
+        color: #fff;
     }
 
-    .delete-button:hover {
-        background-color: #ef4444;
+    .view-btn:hover {
+        background-color: #218838;
     }
 
+    .delete-btn {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .email-btn {
+        background-color: #10b981;
+        color: white;
+        margin-top: 15px;
+        display: inline-block;
+    }
+
+    .email-btn:hover {
+        background-color: #059669;
+    }
+
+    /* Status Badges */
     .status-badge {
         display: inline-block;
         padding: 4px 10px;
@@ -341,24 +396,24 @@ $conn->close();
         text-transform: capitalize;
         font-weight: bold;
     }
-    
+
     .status-yes {
         background-color: #d4edda;
         color: #155724;
     }
-    
+
     .status-no {
         background-color: #f8d7da;
         color: #721c24;
     }
 
+    /* Alert Boxes */
     .alert-box {
         padding: 15px;
-        background-color: #f8d7da;
-        color: #721c24;
         border-radius: 8px;
-        border: 1px solid #f5c6cb;
+        border: 1px solid transparent;
         margin-bottom: 20px;
+        text-align: center;
     }
 
     .alert-box.success {
@@ -366,42 +421,40 @@ $conn->close();
         color: #155724;
         border-color: #c3e6cb;
     }
-    
-    .alert-box.success a {
-        color: #155724;
-        text-decoration: underline;
-    }
 
     /* Modal styles */
     .modal {
         display: none;
         position: fixed;
         z-index: 1000;
-        top: 0;
         left: 0;
+        top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.6);
         justify-content: center;
         align-items: center;
+        overflow: auto;
     }
 
     .modal-content {
         background-color: #fff;
         padding: 30px;
-        border-radius: 8px;
+        border-radius: 10px;
         width: 90%;
-        max-width: 600px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 650px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         position: relative;
     }
 
     .modal-content h2 {
         margin-top: 0;
         color: #1a2a47;
+        font-size: 24px;
+        margin-bottom: 20px;
     }
 
-    .modal .close {
+    .close-btn {
         color: #aaa;
         position: absolute;
         top: 15px;
@@ -409,25 +462,40 @@ $conn->close();
         font-size: 30px;
         font-weight: bold;
         cursor: pointer;
+        transition: color 0.3s;
     }
 
-    .modal .close:hover,
-    .modal .close:focus {
-        color: black;
+    .close-btn:hover,
+    .close-btn:focus {
+        color: #333;
     }
-    
+
     .modal-info p {
         margin: 5px 0;
         color: #555;
     }
-    
+
     .modal-info p strong {
         color: #333;
     }
 
+    .message-display {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .message-display p {
+        margin: 0;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+
     label {
         display: block;
-        margin-top: 15px;
+        margin-top: 20px;
         font-weight: 600;
         color: #333;
     }
@@ -439,11 +507,17 @@ $conn->close();
         border: 1px solid #e2e8f0;
         border-radius: 6px;
         box-sizing: border-box;
-        min-height: 100px;
+        min-height: 120px;
         font-size: 15px;
+        transition: border-color 0.3s;
     }
 
-    button[type="submit"] {
+    textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
+    .save-btn {
         background-color: #10b981;
         color: white;
         padding: 12px 20px;
@@ -454,38 +528,89 @@ $conn->close();
         font-size: 16px;
         font-weight: 600;
         transition: background-color 0.3s;
+        width: 100%;
     }
 
-    button[type="submit"]:hover {
+    .save-btn:hover {
         background-color: #059669;
     }
-    
+
+    /* Responsive styles */
     @media (max-width: 768px) {
-        .message-card {
+        .main-container {
+            padding: 10px;
+        }
+
+        .search-form-container {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
         }
-        
-        .actions {
-            margin-top: 15px;
-            margin-left: 0;
-            width: 100%;
-            justify-content: space-around;
-        }
-        
-        .search-form {
-            flex-direction: column;
-        }
-        
+
         .search-form input[type="text"] {
             border-radius: 8px;
-            margin-bottom: 10px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .search-form {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .search-btn,
+        .reset-btn {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        thead {
+            display: none;
+        }
+
+        table,
+        tbody,
+        tr,
+        td {
+            display: block;
             width: 100%;
         }
-        
-        .search-form button {
+
+        tr {
+            background-color: #fff;
             border-radius: 8px;
-            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .table-cell {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-cell::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #555;
+            flex-basis: 40%;
+            text-align: left;
+        }
+
+        .table-cell.status::before {
+            content: 'Replied:';
+        }
+
+        .table-cell.date::before {
+            content: 'Submitted At:';
+        }
+
+        .table-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            border-bottom: none;
         }
     }
 </style>

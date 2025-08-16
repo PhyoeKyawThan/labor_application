@@ -213,6 +213,12 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     About
                 </a>
             </li>
+            <li>
+                <a href="<?= BASE_URL . '?vr=contact' ?>" class="<?= $current === 'contact' ? 'active' : '' ?>">
+                    <i class="fa-solid fa-envelope icon"></i>
+                    Contact
+                </a>
+            </li>
         </ul>
         <div class="logout-link">
             <a href="actions/logout.php" onclick="return confirm('Are you sure you want to logout?')">
