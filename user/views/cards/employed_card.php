@@ -29,7 +29,7 @@ foreach ($employees as $emp):
         <p>
             Your <?= $date['day'] . '.' . $date['month'] . '.' . $date['year'] ?>
             letter No <?= $detail['letter_no'] ?? '-' ?>
-            Serial Number <?= $detail['serial_number'] ?>
+            Serial Number <?= $emp['serial_number'] ?>
             date <?= $reg_date['day'] . '.' . $reg_date['month'] . '.' . $reg_date['year'] ?>
             name <?= $emp['name'] ?>
             fathername <?= $emp['fatherName'] ?>

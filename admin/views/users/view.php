@@ -20,10 +20,7 @@ if ($type === 'er') {
     $data = $userModel->readApplication($uid);
 }
 
-if (!$data) {
-    echo "<div class='container p-4'><div class='alert-box'>No data found for this ID.</div></div>";
-    exit;
-}
+
 ?>
 
 <div class="view-container">
@@ -33,8 +30,14 @@ if (!$data) {
             <?= $type === 'er' ? 'Employee Request Details' : ($type === 'ee' ? 'Application Details' : 'Details') ?>
         </h1>
     </div>
-    <?php if ($type === 'er'): ?>
-        <a href="/labor_application/admin/?vr=employer&fid=<?= urlencode($data['id']) ?>&fURL=<?= $_SERVER['REQUEST_URI'] ?>" class="view-icon">
+    <?php
+    if (!$data) {
+        echo "<div class='container p-4'><div class='alert-box'>No data found for this User.</div></div>";
+        exit;
+    }
+    if ($type === 'er'): ?>
+        <a href="/labor_application/admin/?vr=employer&fid=<?= urlencode($data['id']) ?>&fURL=<?= $_SERVER['REQUEST_URI'] ?>"
+            class="view-icon">
             <i class="fas fa-eye"></i>
         </a>
         <div class="details-grid">
@@ -43,7 +46,8 @@ if (!$data) {
             <div class="detail-item"><span class="label">Position:</span><span
                     class="value"><?= htmlspecialchars($data['position']) ?></span></div>
             <div class="detail-item"><span class="label">Status:</span>
-                <span class="value status-badge status-<?= strtolower(str_replace(' ', '', $data['status'] == 'Approved' || $data['status'] == 'Finished' ? 'approved' : 'pending')) ?>">
+                <span
+                    class="value status-badge status-<?= strtolower(str_replace(' ', '', $data['status'] == 'Approved' || $data['status'] == 'Finished' ? 'approved' : 'pending')) ?>">
                     <?= htmlspecialchars($data['status']) ?>
                 </span>
             </div>
@@ -56,7 +60,8 @@ if (!$data) {
         </div>
 
     <?php elseif ($type === 'ee'): ?>
-        <a href="/labor_application/admin/?vr=labors&lid=<?= urlencode($data['id']) ?>&fURL=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="view-icon">
+        <a href="/labor_application/admin/?vr=labors&lid=<?= urlencode($data['id']) ?>&fURL=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
+            class="view-icon">
             <i class="fas fa-eye"></i>
         </a>
         <div class="details-grid">
