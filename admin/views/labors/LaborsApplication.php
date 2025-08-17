@@ -14,6 +14,21 @@ class LaborsApplication extends Connection
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function deleteApplication($id){
+        $stmt = parent::$connection->prepare("DELETE FROM $this->table_name WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
+    public function getApplicationByStatus($status)
+    {
+        $stmt = parent::$connection->prepare("SELECT * FROM {$this->table_name} WHERE status = ?");
+        $stmt->bind_param('s', $status);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getApplicationById($id)
     {
         $stmt = parent::$connection->prepare("SELECT * FROM {$this->table_name} WHERE id = ?");

@@ -1,60 +1,83 @@
 <?php
 require_once __DIR__ . '/LaborsApplication.php';
 $lbModel = new LaborsApplication();
-if(isset($_GET['lid'])){
-    require_once __DIR__.'/view.php';
-    exit;
+$delete_msg = null;
+if(isset($_GET['did'])){
+    if($lbModel->deleteApplication((int) $_GET['did'])){
+        $delete_msg = "Delete Success";
+    }
 }
-$applications = $lbModel->getApplications();
-if(isset($_GET['s'])){
-    $applications = $lbModel->search($_GET['s']);
-}
-?>
-<h1>Laborers List</h1>
+if (isset($_GET['stus'])) {
+    switch ($_GET['stus']) {
+        case 'pending':
+            require __DIR__ . '/pending.php';
+            break;
+        case 'approved':
+            require __DIR__ . '/approved.php';
+            break;
+        case 'resubmit':
+            require __DIR__ . '/resubmit.php';
+            break;
+        default:
+            die("Not found");
+    }
+} else {
+    if (isset($_GET['lid'])) {
+        require_once __DIR__ . '/view.php';
+        exit;
+    }
+    $applications = $lbModel->getApplications();
+    if (isset($_GET['s'])) {
+        $applications = $lbModel->search($_GET['s']);
+    }
+    ?>
+    <h1>Laborers List</h1>
 
-<div class="search-form">
-    <form action="" method="GET">
-        <input type="hidden" name="vr" value="labors">
-        <input type="text" name="s" placeholder="Search by name, NRC, or serial number"
-            value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
-        <button type="submit">Search</button>
-    </form>
-</div>
+    <div class="search-form">
+        <form action="" method="GET">
+            <input type="hidden" name="vr" value="labors">
+            <input type="text" name="s" placeholder="Search by name, NRC, or serial number"
+                value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>No.</th>
-            <th>Picture</th>
-            <th>Name</th>
-            <th>Serial Number</th>
-            <th>Status</th>
-            <th>Registration Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $no = 0;
-        foreach ($applications as $laborer):
-            $no += 1;
-            ?>
+    <table>
+        <thead>
             <tr>
-                <td><?= $no ?></td>
-                <td><img src="/labor_application/<?= htmlspecialchars($laborer['picture']) ?>" alt="Picture" width="50"></td>
-                <td><?= htmlspecialchars($laborer['name']) ?></td>
-                <td><?= htmlspecialchars($laborer['serial_number']) ?></td>
-                <td><?= htmlspecialchars($laborer['status']) ?></td>
-                <td><?= htmlspecialchars($laborer['registration_date']) ?></td>
-                <td class="actions">
-                    <a href="?vr=labors&lid=<?= $laborer['id'] ?>">View</a>
-                    <a href="actions/delete_labor.php?id=<?= $laborer['id'] ?>"
-                        onclick="return confirm('Are you sure you want to delete this labor?')">Delete</a>
-                </td>
+                <th>No.</th>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Serial Number</th>
+                <th>Status</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php
+            $no = 0;
+            foreach ($applications as $laborer):
+                $no += 1;
+                ?>
+                <tr>
+                    <td><?= $no ?></td>
+                    <td><img src="/labor_application/<?= htmlspecialchars($laborer['picture']) ?>" alt="Picture" width="50">
+                    </td>
+                    <td><?= htmlspecialchars($laborer['name']) ?></td>
+                    <td><?= htmlspecialchars($laborer['serial_number']) ?></td>
+                    <td><?= htmlspecialchars($laborer['status']) ?></td>
+                    <td><?= htmlspecialchars($laborer['registration_date']) ?></td>
+                    <td class="actions">
+                        <a href="?vr=labors&lid=<?= $laborer['id'] ?>">View</a>
+                        <a href="?vr=labors&did=<?= $laborer['id'] ?>"
+                            onclick="return confirm('Are you sure you want to delete this labor?')">Delete</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php } ?>
 
 <style>
     /* Search Form */

@@ -136,6 +136,29 @@ if (!isset($_SESSION['admin_logged_in'])) {
             overflow-y: scroll;
         }
 
+        .sidebar-nav-list .dropdown {
+            position: relative;
+            flex-direction: column;
+        }
+
+        .sidebar-nav-list .dropdown-menu {
+            list-style: none;
+            margin: 0;
+            padding-left: 1.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-nav-list .dropdown.open .dropdown-menu {
+            display: flex;
+        }
+
+        .sidebar-nav-list .dropdown-menu a {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
 
         @media (max-width: 768px) {
             nav {
@@ -177,11 +200,41 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     Dashboard
                 </a>
             </li>
-            <li>
-                <a href="<?= BASE_URL . '?vr=labors' ?>" class="<?= $current === 'labors' ? 'active' : '' ?>">
+            <li class="dropdown <?= $current === 'labors' ? 'active' : '' ?>">
+                <a href="javascript:void(0)" class="dropdown-toggle">
                     <i class="fa-solid fa-user-tie icon"></i>
-                    Laborers
+                    Laborers <i class="fa-solid fa-chevron-down" style="margin-left:auto;font-size:0.8rem;"></i>
                 </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="<?= BASE_URL . '?vr=labors' ?>"
+                            class="<?= $current === 'labors' && ($_GET['stus'] ?? '') === '' ? 'active' : '' ?>">
+                            <i class="fa-solid fa-list icon"></i>
+                            All Laborers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL . '?vr=labors&stus=pending' ?>"
+                            class="<?= ($current === 'labors' && ($_GET['stus'] ?? '') === 'pending') ? 'active' : '' ?>">
+                            <i class="fa-solid fa-hourglass-half icon"></i>
+                            Pending
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL . '?vr=labors&stus=resubmit' ?>"
+                            class="<?= ($current === 'labors' && ($_GET['stus'] ?? '') === 'resubmit') ? 'active' : '' ?>">
+                            <i class="fa-solid fa-repeat icon"></i>
+                            Resubmit
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL . '?vr=labors&stus=approved' ?>"
+                            class="<?= ($current === 'labors' && ($_GET['stus'] ?? '') === 'approved') ? 'active' : '' ?>">
+                            <i class="fa-solid fa-circle-check icon"></i>
+                            Approved
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="<?= BASE_URL . '?vr=employer' ?>" class="<?= $current === 'employer' ? 'active' : '' ?>">
@@ -227,6 +280,26 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </a>
         </div>
     </nav>
+    <script>
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            const parent = toggle.parentElement;
+            const menuId = parent.querySelector('.dropdown-menu')?.id || 'laborers-dropdown';
 
-    </nav>
+            if (localStorage.getItem(menuId) === 'open' || parent.querySelector('.dropdown-menu a.active')) {
+                parent.classList.add('open');
+            }
+
+            toggle.addEventListener('click', function () {
+                parent.classList.toggle('open');
+
+                if (parent.classList.contains('open')) {
+                    localStorage.setItem(menuId, 'open');
+                } else {
+                    localStorage.setItem(menuId, 'closed');
+                }
+            });
+        });
+    </script>
+
+
     <main>

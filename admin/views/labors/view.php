@@ -39,7 +39,7 @@ if (!empty($laborer['images'])) {
     }
 }
 
-
+$stus = isset($_GET['stus']) ? '&stus='.$_GET['stus'] : '';
 ?>
 <style>
     /* body {
@@ -165,7 +165,7 @@ if (!empty($laborer['images'])) {
 </style>
 
 <div>
-    <a href="<?= $_GET['fURL'] ?? "/labor_application/admin/?vr=labors" ?>">
+    <a href="<?= $_GET['fURL'] ?? "/labor_application/admin/?vr=labors".$stus ?>">
         <i class="fas fa-arrow-left" style="font-size: 20px;"></i>
     </a>
     <h1>Labour - <?= htmlspecialchars($laborer['name']) ?></h1>
@@ -176,6 +176,11 @@ if (!empty($laborer['images'])) {
     <div style="color: green;"><?= $msg ?? '' ?></div>
     <div style="color: red;"><?= $err ?? '' ?> </div>
     <input type="hidden" name="id" value="<?= (int) $laborer['id'] ?>" id="id">
+    <?php 
+        if(!empty($stus)):
+    ?>
+        <input type="hidden" name="stus" value="<?= $stus ?>">
+    <?php endif; ?>
 
     <div>
         <label for="name">Name</label>

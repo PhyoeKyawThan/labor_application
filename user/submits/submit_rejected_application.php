@@ -79,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "images" => json_encode($new_images),
         "updated_at" => $update_time,
         "is_resubmit" => true,
+        "status" => "Resubmitted",
         "user_id" => $user_id
     ];
     if ($appModel->updateApplication()) {
