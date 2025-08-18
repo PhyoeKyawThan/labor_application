@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'occupation' => json_encode($_POST['occupation']),
         'phone' => trim($_POST['phone']),
         'report_receiver' => trim($_POST['report_receiver']),
-        'letter_no' => $_POST['letter_no'] ?? ' - ',
         'user_id' => $_SESSION['user_id']
     ];
 
@@ -52,14 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="tel" name="phone" id="phone">
         </div>
     </div>
-    <h3>TODO// remove</h3>
-    <div class="form-row">
-        <div class="form-group">
-            <label for="letter_no">Letter No.</label>
-            <input type="text" name="letter_no" id="letter_no">
-        </div>
-    </div>
-
     <div class="form-group">
         <label for="report-receiver">Name and position of the person to whom the workers must report.</label>
         <textarea name="report_receiver" id="report-receiver"></textarea>

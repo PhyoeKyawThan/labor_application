@@ -15,7 +15,6 @@ class EmployeeReqFormModel extends Connection
             phone, 
             occupation,
             report_receiver,
-            letter_no,
             user_id
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sssssssi", 
@@ -25,7 +24,6 @@ class EmployeeReqFormModel extends Connection
             $data['phone'],
             $data['occupation'],
             $data['report_receiver'],
-            $data['letter_no'],
             $data['user_id']
         );
         
