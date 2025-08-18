@@ -142,6 +142,13 @@ class EmployeeReqForm extends Connection
         return parent::$connection->query("UPDATE employee_req_form SET status = '$status' WHERE id = $form_id");
         ;
     }
+
+    public function saveConfirmDataFromEmployer($form_id, $status, $sign, $stamp){
+        $query = parent::$connection->prepare("UPDATE employee_req_form SET status = ?, department_confirm_sign = ?, department_confirm_stamp = ? WHERE id = ?");
+        $query->bind_param("sssi", $status, $sign, $stamp, $form_id);
+        return $query->execute();
+    }
+
     public function readAll()
     {
         $query = parent::$connection->query("SELECT * FROM employee_req_form ORDER BY id DESC");

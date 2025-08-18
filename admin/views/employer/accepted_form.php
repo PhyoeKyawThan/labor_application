@@ -24,9 +24,16 @@
             color: #333;
         }
 
+        .header-parent{
+            display: flex;
+            justify-content: end;
+        }
+
         .header {
-            text-align: right;
+            width: fit-content;
+            text-align: left;
             margin-bottom: 20px;
+            margin-right: 0;
             line-height: 1.5;
         }
 
@@ -40,6 +47,7 @@
         }
 
         .header .doc-number {
+            width: fit-content;
             display: flex;
             justify-content: flex-end;
             align-items: baseline;
@@ -78,6 +86,22 @@
         .signature-section {
             margin-top: 50px;
             text-align: right;
+        }
+
+        .signature-section img {
+            width: 150px;
+            height: 150px;
+        }
+        .stamp{
+            position: absolute;
+            opacity: 0.5;
+            top: 20px;
+            /* right: 150px; */
+            
+        }
+        .stamp img{
+            width: 200px;
+            height: 200px;
         }
 
         .signature-section .sign-label {
@@ -160,7 +184,8 @@
 <?php
 if (isset($_GET['correct'])) {
     if ($detail['status'] != 'Finished') {
-        if ($reqModel->changeStatus((int) $_GET['fid'], "Department Approvel")) {
+        $status = $_GET['status'] == 'Confirmed' ? 'Finished' : 'Department Approvel';
+        if ($reqModel->changeStatus((int) $_GET['fid'], $status)) {
             $url = $_SERVER['REQUEST_URI'];
             $parts = parse_url($url);
             parse_str($parts['query'] ?? '', $queryParams);
@@ -176,14 +201,13 @@ if (isset($_GET['correct'])) {
 
 <body>
     <div class="controls-container">
-        <a
-            href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] . '' ?>">
+        <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] . '' ?>">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2>Preview</h2>
         <div display="flex">
             <button style="background-color: green;"
-                onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&correct=true'"><i
+                onclick="window.location.href = '<?= $_SERVER['REQUEST_URI'] ?>&correct=true&status=<?= $detail['status'] ?>'"><i
                     class="fas fa-mark"></i><?= $detail['status'] ?></button>
             <button
                 onclick="window.open('/labor_application/user/views/cards/employed_card.php?app_id=<?= $detail['id'] ?>&uid=<?= $detail['uid'] ?>', 'EmployeeCards', 'width=1000,height=700,scrollbars=yes,resizable=yes'); return false;">
@@ -191,30 +215,31 @@ if (isset($_GET['correct'])) {
             </button>
             <button onclick="downloadTwoPagePdf()">View as Pdf</button>
         </div>
-        <!-- <button onclick="window.print()">Print</button> -->
     </div>
 
     <!-- First Page -->
     <div class="a4-container">
-        <div class="header">
-            <div class="office-name">
-                အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)
-            </div>
-            <div class="address">
-                ဗဟိုရုံး
-            </div>
-            <div class="address">
-                နေပြည်တော်
-            </div>
-            <div class="address">
-                စာအမှတ်၊ ၈/၂/အလည-မ(အလခ)( )
-            </div>
-            <div class="doc-number">
-                <span class="label">ရက်စွဲ:</span>
-                <b><?php
-                $curr = new DateTime();
-                echo formatMyanmarDate($curr->format('Y-m-d'));
-                ?> </b>
+        <div class="header-parent">
+            <div class="header">
+                <div class="office-name">
+                    အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)
+                </div>
+                <div class="address">
+                    ဗဟိုရုံး
+                </div>
+                <div class="address">
+                    နေပြည်တော်
+                </div>
+                <div class="address">
+                    စာအမှတ်၊ ၈/၂/အလည-မ(အလခ)( )
+                </div>
+                <div class="doc-number">
+                    <span class="label">ရက်စွဲ:</span>
+                    <b><?php
+                    $curr = new DateTime();
+                    echo formatMyanmarDate($curr->format('Y-m-d'));
+                    ?> </b>
+                </div>
             </div>
         </div>
 
@@ -252,10 +277,14 @@ if (isset($_GET['correct'])) {
         </div>
 
         <div class="signature-section">
+            <img src="<?= $detail['department_confirm_sign'] ?? 'https://placehold.co/600x400/png' ?>" alt="" srcset="">
             <div class="sign-label">
                 ဦးစီးမှူး
             </div>
             <p>ရုံးတာဝန်ခံ</p>
+        </div>
+        <div class="stamp">
+            <img src="<?= $detail['department_confirm_stamp'] ?? 'https://placehold.co/600x400/png' ?>" alt="" srcset="">
         </div>
     </div>
 

@@ -11,7 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'department_address' => trim($_POST['department_address']),
         'occupation' => json_encode($_POST['occupation']),
         'phone' => trim($_POST['phone']),
-        'report_receiver' => trim($_POST['report_receiver']),
+        'report_receiver_name' => trim($_POST['report_receiver_name']),
+        'report_receiver_position' => trim($_POST['report_receiver_position']),
+        'report_receiver_address' => trim($_POST['report_receiver_address']),
+        'report_receiver_time' => trim($_POST['report_receiver_time']),
         'user_id' => $_SESSION['user_id']
     ];
 
@@ -27,39 +30,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <form action="" method="post" class="modern-form">
-    <h1 class="form-title">Employee Details</h1>
-
+    <h1 class="form-title">အလုပ်သမားလိုကြောင်း အကြောင်းကြားစာ</h1>
+    <p>အလုပ်ရှင်၏</p>
     <div class="form-row">
         <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">အမည်</label>
             <input type="text" name="name" id="name">
         </div>
         <div class="form-group">
-            <label for="position">Position</label>
+            <label for="position">ရာထူး</label>
             <input type="text" name="position" id="position">
         </div>
     </div>
 
     <div class="form-group">
-        <label for="depart-address">Department Address</label>
+        <label for="depart-address">ဌာန လိပ်စာ</label>
         <textarea name="department_address" id="depart-address"></textarea>
     </div>
 
     <div class="form-row">
         <div class="form-group">
-            <label for="phone">Phone Number</label>
+            <label for="phone">ဖုန်းနံပါတ်</label>
             <input type="tel" name="phone" id="phone">
         </div>
     </div>
-    <div class="form-group">
-        <label for="report-receiver">Name and position of the person to whom the workers must report.</label>
-        <textarea name="report_receiver" id="report-receiver"></textarea>
+    <p>အလုပ်သမားသွားရောက် အစီရင်ခံရမည့် ပုဂ္ဂိုလ်၏</p>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="report-receiver">အမည်</label>
+            <input type="text" name="report_receiver_name" id="report-receiver" class="" required>
+        </div>
+        <div class="form-group">
+            <label for="report-receiver-position">ရာထူး</label>
+            <input type="text" name="report_receiver_position" id="report-receiver-position" required>
+        </div>
     </div>
+    <p>အစီရင်ခံရမည့် </p>
+    <dv class="form-row">
+        <div class="form-group">
+            <label for="report-receiver-address">နေရာ</label>
+            <input type="text" name="report_receiver_address" id="report-receiver-address" required>
+        </div>
+        <div class="form-group">
+            <label for="report-receiver-time">အချိန်</label>
+            <input type="datetime-local" name="report_receiver_time" id="report-receiver-time">
+        </div>
+    </dv>
     <div id="occupied_work_container">
         <div class="occupied-work-group" id="occupied-work-group-0">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="occupation-0">Occupation</label>
+                    <label for="occupation-0">အလုပ်အကိုင်</label>
                     <select name="occupation[0][occupation]" id="occupation-0">
                         <?php foreach (array_keys($position_codes['employee_codes']) as $position):
                             ?>
@@ -67,16 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     </select>
                 </div>
+            </div>
+            <p>လိုအပ်သော အလုပ်သမားဦးရေ</p>
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="male-0">Male</label>
+                    <label for="male-0">ကျား</label>
                     <input type="number" name="occupation[0][male]" id="male-0">
 
-                    <label for="female-0">Female</label>
+                    <label for="female-0">မ</label>
                     <input type="number" name="occupation[0][female]" id="female-0">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="qualification-0">Qualification</label>
-                    <!-- <input type="text" name="occupation[0][qualification]" id="qualification-0"> -->
+                    <label for="qualification-0">အလုပ်ကိုင်အမျိုးအစားနှင့် လိုအပ်သော အရည်အချင်း</label>
                     <select name="occupation[0][qualification]" id="qualification-0">
                         <?php foreach ($educationLevels as $edu_level):
                             ?>
@@ -86,16 +111,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
             <div class="form-group">
-                <label for="skill-0">Skills</label>
+                <label for="skill-0">ကျွမ်းကျင်မှုအဆင့်အတန်း (သို့) အတန်းစား</label>
                 <input type="text" name="occupation[0][skill]" id="skill-0">
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="working_type_period-0">Working Type</label>
+                    <label for="working_type_period-0">အလုပ်လုပ်ကိုင်ရမည့် ကာလအပိုင်းအခြားနှင့် နေရာဒေသ</label>
                     <input type="text" name="occupation[0][working_type_period]" id="working_type_period-0">
                 </div>
                 <div class="form-group">
-                    <label for="salary-0">Salary</label>
+                    <label for="salary-0">လစာနှုန်း</label>
                     <input type="text" name="occupation[0][salary]" id="salary-0">
                 </div>
             </div>
@@ -174,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     input[type="text"],
     input[type="tel"],
+    input[type="datetime-local"],
     select,
     input[type="number"],
     textarea {

@@ -330,22 +330,32 @@ if (isset($_GET['pf'])) {
     </div>
     <div class="employer-detail">
         <div>
-            <strong>Name:</strong> <?= $detail['name'] ?>
+            <strong>အလုပ်ရှင်၏ အမည်:</strong> <?= $detail['name'] ?>
         </div>
         <div>
-            <strong>Position:</strong> <?= $detail['position'] ?>
+            <strong>အလုပ်ရှင်၏ ရာထူး:</strong> <?= $detail['position'] ?>
         </div>
         <div>
-            <strong>Department Address:</strong> <?= $detail['department_address'] ?>
+            <strong>ဌာန လိပ်စာ:</strong> <?= $detail['department_address'] ?>
         </div>
         <div>
-            <strong>Phone: </strong> <?= $detail['phone'] ?>
+            <strong>ဖုန်းနံပါတ်: </strong> <?= $detail['phone'] ?>
         </div>
         <div>
-            <strong>Report receiver: </strong> <?= $detail['report_receiver'] ?>
+            <strong>အလုပ်သမားသွားရောက် အစီရင်ခံရမည့် ပုဂ္ဂိုလ်၏ အမည် : </strong> <?= $detail['report_receiver_name'] ?>
         </div>
         <div>
-            <strong>Submitted Date: </strong> <?= $detail['submitted_at'] ?>
+            <strong>အလုပ်သမားသွားရောက် အစီရင်ခံရမည့် ပုဂ္ဂိုလ်၏ ရာထူး : </strong>
+            <?= $detail['report_receiver_position'] ?>
+        </div>
+        <div>
+            <strong>အစီရင်ခံရမည့် နေရာ : </strong> <?= $detail['report_receiver_address'] ?>
+        </div>
+        <div>
+            <strong>အစီရင်ခံရမည့် အချိန် : </strong> <?= $detail['report_receiver_time'] ?>
+        </div>
+        <div>
+            <strong>လျှောက်လွှာပေးပို့သည့် ရက်စွဲ: </strong> <?= $detail['submitted_at'] ?>
         </div>
     </div>
     <div class="card-header">Required Worker Details</div>
@@ -354,41 +364,45 @@ if (isset($_GET['pf'])) {
         foreach (json_decode($detail['occupation'], true) as $d):
             ?>
             <div class="data-card">
-                <div class="card-item"><span class="card-item-label">Position:</span> <?= $d['occupation'] ?></div>
-                <div class="card-item"><span class="card-item-label">Skill:</span> <?= $d['skill'] ?></div>
-                <div class="card-item"><span class="card-item-label">Required Male Count:</span> <?= $d['male'] ?></div>
-                <div class="card-item"><span class="card-item-label">Required Female Count:</span> <?= $d['female'] ?></div>
-                <div class="card-item"><span class="card-item-label">Qualification:</span> <?= $d['qualification'] ?></div>
-                <div class="card-item"><span class="card-item-label">Salary:</span> <?= $d['salary'] ?></div>
+                <div class="card-item"><span class="card-item-label">အလုပ်အကိုင်:</span> <?= $d['occupation'] ?></div>
+                <div class="card-item"><span class="card-item-label">ကျွမ်းကျင်မှုအဆင့်အတန်း (သို့) အတန်းစား:</span>
+                    <?= $d['skill'] ?></div>
+                <div class="card-item"><span class="card-item-label">လိုအပ်သော အလုပ်သမားဦးရေ (ကျား):</span>
+                    <?= $d['male'] ?></div>
+                <div class="card-item"><span class="card-item-label">လိုအပ်သော အလုပ်သမားဦးရေ (မ):</span> <?= $d['female'] ?>
+                </div>
+                <div class="card-item"><span class="card-item-label">အလုပ်ကိုင်အမျိုးအစားနှင့် လိုအပ်သော အရည်အချင်း:</span>
+                    <?= $d['qualification'] ?></div>
+                <div class="card-item"><span class="card-item-label">လစာနှုန်း:</span> <?= $d['salary'] ?></div>
             </div>
         <?php endforeach; ?>
     </div>
-    <h1>Requested Employees</h1>
+    <h1>တောင်းခံသော အလုပ်သမားများ</h1>
     <table>
         <thead>
             <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Serial Number</th>
-                <th>Education</th>
+                <th>စဉ်</th>
+                <th>အမည်</th>
+                <th>အလုပ်သမား အမှတ်</th>
+                <th>အရည်အချင်း</th>
             </tr>
         </thead>
         <tbody>
             <?php
-                foreach($reqModel->readEmployeeDetails($_GET['fid']) as $index => $emp):
-            ?>
-            <tr>
-                <td><?= ++$index ?></td>
-                <td><?= $emp['name'] ?></td>
-                <td><?= $emp['serial_number'] ?></td>
-                <td><?= $emp['edu_level'] ?></td>
-            </tr>
+            foreach ($reqModel->readEmployeeDetails($_GET['fid']) as $index => $emp):
+                ?>
+                <tr>
+                    <td><?= ++$index ?></td>
+                    <td><?= $emp['name'] ?></td>
+                    <td><?= $emp['serial_number'] ?></td>
+                    <td><?= $emp['edu_level'] ?></td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
     <hr>
     <div class="actions">
-        <a href="<?= $_SERVER['REQUEST_URI'] ?>&pf=true">Request an approval Of the requested Department</a>
+        <a href="<?= $_SERVER['REQUEST_URI'] ?>&pf=true">ခွင့်ပြုချက်တောင်းခံရန်</a>
     </div>
 </div>
 

@@ -16,8 +16,8 @@ $reqModel = new EmployeeReqForm();
 
 $detail = $reqModel->readDetails($form_id);
 $occupation = json_decode($detail['occupation'], true)[0];
-if (isset($_GET['confirm'])) {
-    if ($reqModel->changeStatus($form_id, 'Finished')) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($reqModel->saveConfirmDataFromEmployer($form_id, 'Confirmed', $_POST['sign'], $_POST['stamp'])) {
         echo "<script>window.close()</script>";
         exit;
     }
@@ -29,6 +29,7 @@ if (isset($_GET['confirm'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -159,6 +160,139 @@ if (isset($_GET['confirm'])) {
             background-color: #0056b3;
         }
 
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            margin: auto;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1em;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        input[type="hidden"] {
+            display: block;
+        }
+
+        input[type="file"] {
+            border: 2px dashed #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        input[type="file"]:hover {
+            background-color: #f7fafc;
+            border-color: #a0aec0;
+        }
+
+        #preview-image {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        #sign-pad-container {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+            background-color: #fff;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        canvas#signature {
+            /* width: 100%;
+            height: 200px;
+            border: none; */
+            cursor: crosshair;
+            margin: auto;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .buttons button,
+        form button[type="submit"] {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            text-transform: uppercase;
+        }
+
+        .buttons button {
+            font-size: 0.9em;
+        }
+
+        .buttons button:active,
+        form button[type="submit"]:active {
+            transform: translateY(1px);
+        }
+
+        #clear-sign-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        #clear-sign-btn:hover {
+            background-color: #dc2626;
+        }
+
+        #save-sign-btn {
+            background-color: #10b981;
+            color: white;
+        }
+
+        #save-sign-btn:hover {
+            background-color: #059669;
+        }
+
+        form button[type="submit"] {
+            background-color: #3b82f6;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #2563eb;
+        }
+
+        .controls-container,
+        .nav-buttons-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+
         @media print {
             body {
                 background-color: white;
@@ -194,11 +328,9 @@ if (isset($_GET['confirm'])) {
 
         <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">Confirmation</h2>
 
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <a href="?confirm=true"
-                style="">
-                <button style="background-color: #22c55e; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;">Confirm</button>
-            </a>
+        <div style="display: flex; gap: 10px; align-items: center;" class="buttons">
+            <!-- ?confirm=true -->
+            <button onclick="toggleForm()">Confirm</button>
             <button onclick="downloadTwoPagePdf()"
                 style="background-color: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
                 View as PDF
@@ -206,6 +338,91 @@ if (isset($_GET['confirm'])) {
         </div>
     </div>
 
+    <form action="" method="post">
+        <input type="hidden" name="comfirm" value="true">
+        <label for="image-upload">တံဆိပ်ခေါင်း</label>
+        <input type="file" name="stamp_image" id="image-upload" accept="image/*">
+        <input type="hidden" name="stamp" id="base64-output">
+        <img id="preview-image" src="" alt="Image Preview" style="display:none; max-width: 200px; margin-top: 10px;">
+        <br>
+        <label for="signature">လက်မှတ်ထိုးရန်</label>
+        <label for="sign">ထိုးမြဲလက်မှတ်</label>
+        <div id="sign-pad-container">
+            <canvas id="signature" width="400" height="200" style="background-color: white-smoke;"></canvas>
+        </div>
+        <input type="hidden" name="sign" id="sign" required>
+        <div class="buttons">
+            <button type="button" onclick="clearSign()" style="background-color: var(--ssir-red)" id="">Clear</button>
+            <button type="button" onclick="saveSign(event)" style="background-color: var(--ssir-green)"
+                id="save-sign">Done</button>
+        </div>
+        <button type="submit">Submit Form</button>
+    </form>
+
+    <script>
+        const fileInput = document.getElementById('image-upload');
+        const base64Output = document.getElementById('base64-output');
+        const previewImage = document.getElementById('preview-image');
+
+        fileInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const base64DataUrl = e.target.result;
+
+
+                    base64Output.value = base64DataUrl;
+
+                    previewImage.src = base64DataUrl;
+                    previewImage.style.display = 'block';
+
+                    console.log("Base64 Data URL:", base64DataUrl);
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                base64Output.value = '';
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+            }
+        });
+
+        const canvas = document.getElementById('signature');
+        const signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgba(0, 0, 0, 0)', // transparent
+        });
+
+        function clearSign() {
+            signaturePad.clear();
+            const save_btn = document.getElementById('save-sign');
+            save_btn.innerText = "Done";
+            save_btn.disabled = false;
+        }
+
+        function saveSign(e) {
+            if (!signaturePad.isEmpty()) {
+                const dataURL = signaturePad.toDataURL("image/png");
+                document.getElementById('sign').value = dataURL;
+                e.target.innerText = "Saved";
+                e.target.disabled = true;
+                console.log("click")
+            } else {
+                alert("Please draw your signature first.");
+            }
+        }
+
+        function toggleForm() {
+            const form = document.querySelector("form");
+            if (form.style.display == 'flex') {
+                form.style.display = 'none';
+            } else {
+                form.style.display = 'flex';
+            }
+        }
+    </script>
 
     <!-- First Page -->
     <div class="a4-container">

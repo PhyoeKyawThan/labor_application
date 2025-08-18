@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
         $to = $_GET['to'];
         $department = $_GET['department'];
         $date = $_GET['date'];
-        $letter_no = $_GET['letter_no'];
         $position = $_GET['position'];
         $reqModel->insertDepartmentApproval([
             $to,
@@ -25,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
     <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] ?>">
         <i class="fas fa-arrow-left"></i>
     </a>
-    <h2>အလုပ်သမား ရှာဖွေရေး ဖောင်</h2>
+    <h2>အလလခ ပုံစံ‌(၆) စာရင်းပေးပို့ခြင်း</h2>
     <form action="" method="get">
         <input type="hidden" name="vr" value="employer">
         <input type="hidden" name="fid" value="<?= $_GET['fid'] ?>">
@@ -39,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
 
 
         <div>
-            <label for="department">ဌာန:</label>
+            <label for="department">အမည်:</label>
             <input type="text" name="department" id="department" value="<?= $detail['name'] ?>" placeholder="ဌာနအမည်">
         </div>
 
@@ -50,11 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
                 $date = new DateTime($detail['submitted_at']);
                 echo $date->format('Y-m-d');
                 ?>" id="date">
-            </div>
-            <div>
-                <label for="letter-no">စာအမှတ်:</label>
-                <input type="text" name="letter_no" id="letter-no" value="<?= $detail['letter_no'] ?? '-' ?>"
-                    placeholder="စာအမှတ်">
             </div>
         </div>
 
