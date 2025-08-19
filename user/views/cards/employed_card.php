@@ -24,26 +24,32 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
                 <div id="employed-card-<?= $emp['nrc'] ?>" class="flip-card-front employed-card">
                     <div class="government-info">
                         <span class="country">ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</span>
+                        <br>
                         <span>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန</span>
                         <span>အလုပ်အကိုင်နှင့်အလုပ်သမားရှာဖွေရေးရုံး</span>
                     </div>
                     <h1 class="card-title">အလုပ်ခန်ထားရေးကတ်ပြား</h1>
                     <p>
-                        Your <?= $date['day'] . '.' . $date['month'] . '.' . $date['year'] ?>
-                        letter No <?= $detail['letter_no'] ?? '-' ?>
-                        Serial Number <?= $emp['serial_number'] ?>
-                        date <?= $reg_date['day'] . '.' . $reg_date['month'] . '.' . $reg_date['year'] ?>
-                        name <?= $emp['name'] ?>
-                        fathername <?= $emp['fatherName'] ?>
-                        address <?= $emp['stable_address'] ?>
-                        nrc <?= $emp['nrc'] ?>
-                        position <?= $occupation['occupation'] ?>
-                        position_code <?= $e_codes[$occupation['occupation']] ?>
-                        Approve date <?= $app_date['day'] . '.' . $app_date['month'] . '.' . $app_date['year'] ?>
+                        လူကြီးမင်း၏ <?= $date['day'] . '.' . $date['month'] . '.' . $date['year'] ?>
+                        နေ့စွဲပါစာအမှတ် <?= $detail['letter_no'] ?? '-' ?>
+                        အရအလုပ်သမားမှတ်ပုံတင်လက်မှတ်၏အမှတ်စဉ် <?= $emp['serial_number'] ?>
+                        နေ့စွဲ <?= $reg_date['day'] . '.' . $reg_date['month'] . '.' . $reg_date['year'] ?>
+                        အမည် <?= $emp['name'] ?>
+                        အဖအမည် <?= $emp['fatherName'] ?>
+                        နေရပ် <?= $emp['stable_address'] ?>
+                        နိုင်ငံသားစိစစ်ရေးအမှတ် <?= $emp['nrc'] ?>
+                        အလုပ်အကိုင် <?= $occupation['occupation'] ?>
+                        အလုပ်ညွှန်အမှတ် <?= $e_codes[$occupation['occupation']] ?> အား
+                        ရက်နေ့ <?= $app_date['day'] . '.' . $app_date['month'] . '.' . $app_date['year'] ?>
+                        အချိန်တွင် ရွေးချယ်လိုက်ပြီးဖြစ်၍ ခန့်ထားရန် လွှတ်လိုက်ပါသည်။ ထိုပုဂ္ဂိုလ်မှန်မမှန်ကို ၎င်း၏
+                        နိုင်ငံသားစိစစ်ရေးကတ်ပြားနှင့် တိုက်ဆိုင်၍ စစ်ဆေးရပါမည်။ ခန့်ထားပြီးပါက ဤရုံးသို့
+                        အကြောင်းပြန်ကြားရပါမည်။
                     </p>
                     <div class="direction-sign">
                         <img src="/labor_application/importants/director_sign.png" alt="">
+                        <!-- <p> ဦးစီးအရာရှိ</p> -->
                     </div>
+
                     <div class="stamp">
                         <img src="/labor_application/importants/stamp_.png" alt="">
                     </div>
@@ -70,14 +76,21 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
         const frontClone = cardFront.cloneNode(true);
         const backClone = cardBack.cloneNode(true);
 
-        const downloadButton = frontClone.querySelector('.download-button');
-        if (downloadButton) {
-            downloadButton.remove();
-        }
+        const downloadButtonFront = frontClone.querySelector('.download-button');
+        const downloadButtonBack = backClone.querySelector('.download-button');
+        if (downloadButtonFront) downloadButtonFront.remove();
+        if (downloadButtonBack) downloadButtonBack.remove();
         const printContainer = document.createElement('div');
         printContainer.className = 'print-container';
-        printContainer.appendChild(frontClone);
-        printContainer.appendChild(backClone);
+
+        const frontWrapper = document.createElement('div');
+        frontWrapper.appendChild(frontClone);
+
+        const backWrapper = document.createElement('div');
+        backWrapper.appendChild(backClone);
+
+        printContainer.appendChild(frontWrapper);
+        printContainer.appendChild(backWrapper);
 
         const originalContent = document.querySelector('.employed-card-container');
         originalContent.style.display = 'none';
@@ -90,6 +103,7 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
             originalContent.style.display = 'flex';
         }, 1000);
     }
+
 </script>
 <style>
     body {
@@ -180,7 +194,7 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
     .flip-card {
         background-color: transparent;
         width: 600px;
-        height: 400px;
+        height: 500px;
         perspective: 1000px;
         cursor: pointer;
     }
@@ -228,18 +242,23 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
         }
 
         .print-container {
-            display: flex;
-            justify-content: center;
+            display: block;
             width: 100%;
-            gap: 20px;
+        }
+
+        .print-container>div {
+            page-break-after: always;
         }
 
         .flip-card-inner,
         .flip-card-back,
         .flip-card-front {
+            margin: auto;
             transform: none !important;
             position: relative !important;
             backface-visibility: visible !important;
+            height: 600px !important;
+            width: 100% !important;
         }
 
         .flip-card-back {
@@ -248,6 +267,7 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
 
         .employed-card {
             max-width: 45%;
+            margin: auto;
         }
 
         .download-button {
