@@ -10,6 +10,7 @@ class EmployeeReqFormModel extends Connection
     {
         $stmt = parent::$connection->prepare("INSERT INTO $this->details_table(
             name, 
+            serial_number,
             position, 
             department_address, 
             phone, 
@@ -19,9 +20,12 @@ class EmployeeReqFormModel extends Connection
             report_receiver_address,
             report_receiver_time,
             user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssssi", 
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $serial_number = $this->serial_number_generator();
+        $stmt->bind_param(
+            "ssssssssssi",
             $data['name'],
+            $serial_number,
             $data['position'],
             $data['department_address'],
             $data['phone'],
@@ -32,16 +36,39 @@ class EmployeeReqFormModel extends Connection
             $data['report_receiver_time'],
             $data['user_id']
         );
-        
+
         $stmt->execute();
-        return $stmt->insert_id; 
+        return $stmt->insert_id;
+    }
+
+    private function serial_number_generator()
+    {
+        $query = mysqli_query(parent::$connection, "SELECT * FROM employee_req_form ORDER BY id DESC LIMIT 1");
+        $latest_application = mysqli_fetch_assoc($query);
+        if (isset($latest_application['id'])):
+            $latest_application_date = new DateTime($latest_application['submitted_at']);
+            $latest_application_yr = $latest_application_date->format('Y');
+            $current_date = new DateTime();
+            $current_year = $current_date->format('Y');
+
+            if ($current_year != $latest_application_yr) {
+                return '000001';
+            } else {
+                $latest_app_serial_num = isset($latest_application['serial_number'])
+                    ? (int) $latest_application['serial_number']
+                    : 0;
+                $next_serial = $latest_app_serial_num + 1;
+                return str_pad((string) $next_serial, 6, '0', STR_PAD_LEFT);
+            }
+        endif;
+        return '001';
     }
 
     public function createEmployeeNumbers($form_id, $serial_numbers)
     {
         $sql = "INSERT INTO $this->numbers_table(form_id, serial_number) VALUES (?, ?)";
         $stmt = parent::$connection->prepare($sql);
-        
+
         foreach ($serial_numbers as $number) {
             $stmt->bind_param("is", $form_id, $number);
             $stmt->execute();
@@ -57,7 +84,8 @@ class EmployeeReqFormModel extends Connection
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function readFormById($user_id){
+    public function readFormById($user_id)
+    {
         $stmt = parent::$connection->prepare("SELECT * FROM $this->details_table WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -88,7 +116,8 @@ class EmployeeReqFormModel extends Connection
             report_receiver = ?
             WHERE id = ?");
 
-        $stmt->bind_param("ssssssi",
+        $stmt->bind_param(
+            "ssssssi",
             $data['name'],
             $data['position'],
             $data['department_address'],
@@ -97,7 +126,7 @@ class EmployeeReqFormModel extends Connection
             $data['report_receiver'],
             $form_id
         );
-        
+
         return $stmt->execute();
     }
 
@@ -105,7 +134,7 @@ class EmployeeReqFormModel extends Connection
     {
         $stmt = parent::$connection->prepare("DELETE FROM $this->details_table WHERE id = ?");
         $stmt->bind_param("i", $form_id);
-        
+
         return $stmt->execute();
     }
 }
