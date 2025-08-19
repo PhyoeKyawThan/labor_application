@@ -12,14 +12,6 @@
 
     body {
         font-family: 'Inter', sans-serif;
-        /* background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0; */
     }
 
     #container {
