@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <div class="auth-container">
     <h2>Welcome Back, Login Here</h2>
-    <?= $err ?? '' ?>
+    <p style="color: red;"><?= $err ?? '' ?></p>
     <b style="display: block; 
     text-align: center; 
     margin: 8px 0;

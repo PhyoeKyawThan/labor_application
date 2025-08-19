@@ -18,7 +18,7 @@ require_once __DIR__ . '/helpers/drop_datas.php';
         background-color: white;
         padding: 30px;
         border-radius: 8px;
-
+        height: fit-content;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 15px;
@@ -61,21 +61,23 @@ require_once __DIR__ . '/helpers/drop_datas.php';
     }
 
     .attachments {
-        width: 90%;
+        width: 100%;
         margin: auto;
         display: flex;
         flex-direction: column;
     }
 
     .attachment {
+        width: 100%;
         background: #ffffff;
-        border-radius: 12px;
+        border-radius: 8px;
         box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
         padding: 24px;
         display: flex;
         flex-direction: column;
         align-items: center;
         transition: box-shadow 0.3s ease;
+        margin: 10px auto;
     }
 
     .attachment:hover {
@@ -93,9 +95,9 @@ require_once __DIR__ . '/helpers/drop_datas.php';
     .attachment input[type="file"] {
         cursor: pointer;
         border: 2px dashed #d1d5db;
-        border-radius: 8px;
+        /* border-radius: 8px; */
         padding: 20px;
-        width: 100%;
+        width: 90%;
         font-size: 0.9rem;
         color: #9ca3af;
         transition: border-color 0.3s ease, color 0.3s ease;
@@ -322,16 +324,16 @@ require_once __DIR__ . '/helpers/drop_datas.php';
                 <img id="preview1" class="preview" alt="Preview of Image File 1" />
             </div>
             <div class="attachment">
-                <label for="file1">မှတ်ပုံတင် (Back)</label>
-                <input type="file" id="file1" name="nrc[1]" accept="image/*" data-att="Nrc"
-                    aria-describedby="desc1" multiple />
-                <img id="preview1" class="preview" alt="Preview of Image File 1" />
+                <label for="file2">မှတ်ပုံတင် (Back)</label>
+                <input type="file" id="file2" name="nrc[1]" accept="image/*" data-att="Nrc"
+                    aria-describedby="desc2" multiple />
+                <img id="preview2" class="preview" alt="Preview of Image File 2" />
             </div>
             <div class="attachment">
-                <label for="file2">Certificate</label>
-                <input type="file" id="file2" name="certificate" accept="image/*" data-att="Certificate"
-                    aria-describedby="desc2" />
-                <img id="preview2" class="preview" alt="Preview of Image File 2" />
+                <label for="file3">Certificate</label>
+                <input type="file" id="file3" name="certificate" accept="image/*" data-att="Certificate"
+                    aria-describedby="desc3" />
+                <img id="preview3" class="preview" alt="Preview of Image File 3" />
             </div>
         </div>
         <input type="submit" value="စာရင်းသွင်းမည် (Register)">
@@ -417,7 +419,7 @@ require_once __DIR__ . '/helpers/drop_datas.php';
         });
     }
 
-    document.getElementById("reg-form") && ['file1', 'file2'].forEach((inputId, idx) => {
+    document.getElementById("reg-form") && ['file1', 'file2', 'file3'].forEach((inputId, idx) => {
         setupPreview(inputId, 'preview' + (idx + 1));
     });
 

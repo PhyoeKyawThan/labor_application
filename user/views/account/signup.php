@@ -61,7 +61,7 @@
         $register = $user->register();
         if($register['success'] ?? null){
             $msg = "Account Created";
-            header("Location: /labor_application/user/?vr=account&auth=login&msg=Account Successfully created! Login Here");
+            echo "<script>location.window.href = '/labor_application/user/?vr=account&auth=login&msg=Account Successfully created! Login Here'; </script>";
             exit;
         }
 
@@ -72,8 +72,8 @@
 ?>
 <div class="auth-container">
     <h2>Signup</h2>
-    <?= $mail_exists ?? '' ?>
-    <?= $msg ?? '' ?>
+    <p style="color: red;"><?= $mail_exists ?? '' ?></p>
+
     <form action="" method="post">
         <input type="text" name="username" placeholder="Username" required />
         <input type="email" name="email" placeholder="Email" required />
