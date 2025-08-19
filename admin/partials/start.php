@@ -34,6 +34,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
         }
 
         body {
+            margin: 0;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
                 Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
             background-color: var(--bg-color);

@@ -199,14 +199,14 @@ $conn->close();
     }
 
     .header {
-        text-align: center;
+        /* text-align: center; */
         margin-bottom: 25px;
     }
 
     .header h1 {
         color: #1a2a47;
         font-size: 28px;
-        margin: 0;
+        /* margin: 0; */
     }
 
     .search-form-container {
