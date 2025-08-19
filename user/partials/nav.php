@@ -9,7 +9,7 @@ $vr = $_GET['vr'] ?? 'home';
         <li><a href="<?= BASE_URL.'?vr=about' ?>" class="<?= $vr == "about" ? 'active' : '' ?>"><i class="fas fa-info-circle"></i> အကြောင်းအရာ</a></li>
     
         <li class="dropdown">
-            <a href="#" class="<?= $vr == "account" ? 'active' : '' ?>"><i class="fas fa-user-circle"></i> အကောင့် ▾</a>
+            <a href="#" class="<?= $vr == "account" ? 'active' : '' ?>"><i class="fas fa-user-circle"></i> <?= $_SESSION['username'] ?? 'အကောင့်' ?> ▾</a>
             <ul class="dropdown-menu">
                 <li><a href="<?= BASE_URL.'?vr=account&p=' ?>"><i class="fas fa-id-card"></i> Profile</a></li>
                 <li><a href="<?= BASE_URL.'?vr=account&a=' ?>"><i class="fas fa-file-alt"></i> Applications</a></li>
