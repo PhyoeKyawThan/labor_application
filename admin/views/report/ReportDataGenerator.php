@@ -3,16 +3,18 @@
 require_once __DIR__ . '/../../../commons/Connection.php';
 
 class ReportDataGenerator extends Connection
-{
+{   
+    public $months;
+    public $year;
     private function getFinishedForm()
     {
-        $stmt_req = parent::$connection->query("SELECT id FROM employee_req_form WHERE status = 'Finished'");
+        $stmt_req = parent::$connection->query("SELECT id FROM employee_req_form WHERE status = 'Finished' AND YEAR(a.registration_date) = $this->year AND MONTH(a.registration_date) = $this->months");
         return $stmt_req->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getEmployedLabors()
     {
-        $finished_form = $this->getFinishedForm();
+        $finished_form = $this->getDepartments();
         $labors = [];
         if ($finished_form) {
             foreach ($finished_form as $f) {
@@ -28,7 +30,7 @@ class ReportDataGenerator extends Connection
 
     public function getNewLabors()
     {
-        return parent::$connection->query("SELECT a.age, a.gender FROM applications as a WHERE a.status = 'Approved'")->fetch_all(MYSQLI_ASSOC);
+        return parent::$connection->query("SELECT a.age, a.gender FROM applications as a WHERE a.status = 'Approved' AND YEAR(a.registration_date) = $this->year AND MONTH(a.registration_date) = $this->months")->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getLaborsWithEdu()
@@ -36,7 +38,7 @@ class ReportDataGenerator extends Connection
         $labors = [];
         foreach ($this->getEduLevels() as $edu) {
             $edu = $edu['edu_level'];
-            $labors[$edu] = parent::$connection->query("SELECT a.age, a.gender FROM applications as a WHERE a.status = 'Approved' AND a.edu_level = '$edu'")->fetch_all(MYSQLI_ASSOC);
+            $labors[$edu] = parent::$connection->query("SELECT a.age, a.gender FROM applications as a WHERE a.status = 'Approved' AND a.edu_level = '$edu' AND YEAR(a.registration_date) = $this->year AND MONTH(a.registration_date) = $this->months")->fetch_all(MYSQLI_ASSOC);
         }
         return $labors;
     }
@@ -62,7 +64,7 @@ class ReportDataGenerator extends Connection
 
     private function getDepartments()
     {
-        return parent::$connection->query("SELECT id, name, occupation, department_address FROM employee_req_form WHERE status = 'Finished'")->fetch_all(MYSQLI_ASSOC);
+        return parent::$connection->query("SELECT r.id, r.name, r.occupation, r.department_address FROM employee_req_form as r JOIN department_approval as da ON da.employee_req_id = r.id WHERE status = 'Finished' AND YEAR(da.approval_req_date) = $this->year AND MONTH(da.approval_req_date) = $this->months")->fetch_all(MYSQLI_ASSOC);
     }
 }
 
