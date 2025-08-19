@@ -61,7 +61,7 @@
         $register = $user->register();
         if($register['success'] ?? null){
             $msg = "Account Created";
-            echo "<script>location.window.href = '/labor_application/user/?vr=account&auth=login&msg=Account Successfully created! Login Here'; </script>";
+            echo "<script>window.location.href = '/labor_application/user/?vr=account&auth=login&msg=Account Successfully created! Login Here'; </script>";
             exit;
         }
 
