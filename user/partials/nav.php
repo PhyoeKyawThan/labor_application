@@ -13,7 +13,12 @@ $vr = $_GET['vr'] ?? 'home';
             <ul class="dropdown-menu">
                 <li><a href="<?= BASE_URL.'?vr=account&p=' ?>"><i class="fas fa-id-card"></i> Profile</a></li>
                 <li><a href="<?= BASE_URL.'?vr=account&a=' ?>"><i class="fas fa-file-alt"></i> Applications</a></li>
-                <li><a href="<?= BASE_URL.'?vr=logout' ?>"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li>
+                    <?= 
+                        isset($_SESSION['user_id']) ? '<a href="'.BASE_URL.'/views/account/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>' 
+                        : '<a href="'.BASE_URL.'/?vr=account&p=&auth=login"><i class="fas fa-sign-in-alt"></i> Login</a>'
+                    ?>
+                </li>   
             </ul>
         </li>
 
