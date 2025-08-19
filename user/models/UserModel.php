@@ -54,6 +54,22 @@ class UserModel extends Connection
         }
     }
 
+    public function updateUserDetail()
+    {
+        try {
+            $stmt = parent::$connection->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
+            $types = parent::get_types($this->table_datas);
+            $stmt->bind_param($types, ...$this->table_datas);
+            
+            return $stmt->execute();
+        } catch (Exception $e) {
+            if ($stmt->errno == 1062) {
+                return false;
+            }
+            die("Exception: " . $e->getMessage());
+        }
+    }
+
     private function get_registered_user()
     {
         $user_id = (int) parent::$connection->insert_id;
@@ -67,7 +83,7 @@ class UserModel extends Connection
         try {
             if ($type == 'employee') {
                 $query = parent::$connection->prepare("SELECT * FROM applications WHERE user_id = ?");
-            }else{
+            } else {
                 $query = parent::$connection->prepare("SELECT * FROM employee_req_form WHERE user_id = ?");
             }
             $query->bind_param('i', $this->user_id);
@@ -84,7 +100,7 @@ class UserModel extends Connection
     {
         try {
             $query = parent::$connection->prepare("SELECT status, is_resubmit FROM applications WHERE user_id = ?");
-            if($type == 'employer'){
+            if ($type == 'employer') {
                 $query = parent::$connection->prepare("SELECT status, is_resubmit FROM employee_req_form WHERE user_id = ?");
             }
             $query->bind_param('i', $this->user_id);

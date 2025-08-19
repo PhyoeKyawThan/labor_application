@@ -1,35 +1,42 @@
 <style>
+    :root {
+        --primary-color: #3b82f6;
+        --text-color: #1f2937;
+        --bg-color: #f9fafb;
+        --card-bg-color: #ffffff;
+        --border-color: #e5e7eb;
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
+    }
 
-  h2 {
-    font-weight: 600;
-    font-size: 24px;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    color: #111827;
-  }
+    body {
+        font-family: system-ui, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
 
-  p {
-    margin-bottom: 1rem;
-  }
+    #about {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: var(--card-bg-color);
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
 
-  ul {
-    list-style-type: disc;
-    margin-left: 1.25rem;
-    margin-bottom: 1rem;
-  }
+    #about-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+    }
 
-  #about-title {
-    text-align: center;
-  }
-
-  #about {
-    width: 90%;
-    border-radius: 8px;
-    padding: 20px;
-    margin: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-
+    p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
 </style>
 
 <?php
@@ -40,9 +47,10 @@ $query = "SELECT * FROM about LIMIT 1";
 $result = $connection->query($query);
 $about = $result->fetch_assoc();
 ?>
+
 <main>
-  <div id="about">
-    <h1 id="about-title"><?= $about['title'] ?></h1>
-    <p><?= $about['body'] ?></p>
-  </div>
+    <div id="about">
+        <h1 id="about-title"><?= htmlspecialchars($about['title']) ?></h1>
+        <p><?= nl2br(htmlspecialchars($about['body'])) ?></p>
+    </div>
 </main>

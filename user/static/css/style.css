@@ -1,41 +1,87 @@
-*{
+* {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-html, body {
-    height: 100%; /* Ensure the body takes the full height of the viewport */
+
+html,
+body {
+    height: 100%;
     margin: 0;
     padding: 0;
     display: flex;
-    /* color: rgb(165, 153, 153); */
-    flex-direction: column; /* Stack children vertically */
+    flex-direction: column;
 }
 
 header {
-   background-color: #0056b3; /* Deep blue to match most logos */
-        color: white;
+    background-color: #0056b3;
+    color: white;
     font-weight: bold;
     padding: 10px 0;
     text-align: center;
 }
 
 nav ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    background: #3758b1;
+    border-radius: 18px;
 }
 
 nav ul li {
-    display: inline;
-    margin: 0 15px;
+    position: relative;
 }
 
 nav ul li a {
-    color: white;
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
     text-decoration: none;
 }
 
+nav ul li a:hover {
+    background: #6795d8;
+    border-radius: 18px;
+}
+
+.active {
+    color: #fff;
+    text-decoration: underline;
+}
+
+
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: #333;
+    min-width: 160px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+}
+
+nav ul li .dropdown-menu li a {
+    padding: 10px 15px;
+    color: #fff;
+}
+
+nav ul li .dropdown-menu li a:hover {
+    background: #555;
+}
+
+nav ul li.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
 main {
-    flex: 1; /* Allow main to grow and take available space */
+    flex: 1;
     padding: 20px;
+    background-color: #d3e0ef;
 }
 
 footer {
