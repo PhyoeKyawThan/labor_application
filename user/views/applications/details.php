@@ -27,17 +27,23 @@
         padding: 2.5rem;
         border-radius: var(--border-radius-lg);
         box-shadow: var(--shadow-lg);
-        max-width: 500px;
+        max-width: 900px;
         width: 100%;
-        text-align: center;
+        /* text-align: center; */
         margin: auto;
     }
 
     #container h1 {
-        margin-top: 0;
+        width: fit-content;
+        margin: auto;
         margin-bottom: 1.5rem;
         font-size: 2.25rem;
         font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    h3 {
+
         color: var(--primary-color);
     }
 
@@ -47,14 +53,18 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: 0.75rem;
+        margin: auto;
     }
 
     #types a,
     #container a,
     .status-badge {
-        display: inline-block;
+        width: fit-content;
+        margin: auto;
+        display: block;
         padding: 0.75rem 1.5rem;
-        border-radius: 9999px; /* Pill shape */
+        border-radius: 9999px;
+        /* Pill shape */
         text-decoration: none;
         font-weight: 600;
         transition: background-color 0.3s ease, transform 0.2s ease;
@@ -76,6 +86,7 @@
         font-size: 1rem;
         line-height: 1.7;
         margin-bottom: 0;
+        text-align: justify;
     }
 
     .status-badge {
@@ -86,7 +97,8 @@
 
     /* Status Colors */
     .rejected {
-        background-color: #ef4444; /* Red for rejected */
+        background-color: #ef4444;
+        /* Red for rejected */
     }
 
     .rejected:hover {
@@ -95,7 +107,8 @@
     }
 
     .pending {
-        background-color: #f59e0b; /* Orange for pending */
+        background-color: #f59e0b;
+        /* Orange for pending */
     }
 
     .pending:hover {
@@ -103,13 +116,14 @@
     }
 
     .success {
-        background-color: #10b981; /* Green for success */
+        background-color: #10b981;
+        /* Green for success */
     }
 
     .success:hover {
         background-color: #059669;
     }
-    
+
     .status-message {
         margin-bottom: 1.5rem;
         font-weight: 500;
@@ -120,7 +134,6 @@
         border-radius: 0.5rem;
         border: 1px solid #fde68a;
     }
-
 </style>
 
 <div id="container">
@@ -141,8 +154,9 @@
     <?php
     if (!isset($_SESSION['user_id'])):
         ?>
-        <a href="<?= BASE_URL ?>/?vr=account&auth=login&msg=You must create an account to Continue" class="status-badge" style="background-color: var(--primary-color);">Make An Application</a>
-    <?php
+        <a href="<?= BASE_URL ?>/?vr=account&auth=login&msg=You must create an account to Continue" class="status-badge"
+            style="background-color: var(--primary-color);">Make An Application</a>
+        <?php
     else:
         $userModel = new UserModel();
         $userModel->user_id = (int) $_SESSION['user_id'];
@@ -151,13 +165,17 @@
             $s = $status['status'];
             if (!$status['is_resubmit']):
                 ?>
-                <a href="<?= $s == 'Rejected' ? '?vr=applications&'.( $_SESSION['type'] == 'employee' ? 'rj=' : 'rje=') : '' ?>" class="status-badge <?= $s == 'Rejected' ? 'rejected' :
-                            ($s == 'Pending' ? 'pending' : 'success') ?>">Application Status: <?= $s ?></a>
+                <a href="<?= $s == 'Rejected' ? '?vr=applications&' . ($_SESSION['type'] == 'employee' ? 'rj=' : 'rje=') : '' ?>"
+                    class="status-badge <?= $s == 'Rejected' ? 'rejected' :
+                        ($s == 'Pending' ? 'pending' : 'success') ?>">Application Status: <?= $s ?></a>
             <?php else: ?>
-                <p class="status-message">Your resubmitted application is currently under review. We will notify you of the outcome as soon as possible.</p>
+                <p class="status-message">Your resubmitted application is currently under review. We will notify you of the outcome
+                    as soon as possible.</p>
             <?php endif; endif; endif; ?>
-    
+    <hr style="margin: 20px auto;">
+    <h3>Requirements</h3>
     <p>
-        To complete your application, please ensure you have provided all the necessary documents, including a valid ID, proof of address, and any required certifications. Incomplete applications may result in delays or rejection.
+        To complete your application, please ensure you have provided all the necessary documents, including a valid ID,
+        proof of address, and any required certifications. Incomplete applications may result in delays or rejection.
     </p>
 </div>
