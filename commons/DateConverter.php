@@ -90,4 +90,11 @@ function getMyanmarDateComponents($date_string)
     ];
 }
 
+function engToBurmeseNumber($number) {
+    $eng = ['0','1','2','3','4','5','6','7','8','9'];
+    $mm  = ['၀','၁','၂','၃','၄','၅','၆','၇','၈','၉'];
+    
+    return str_replace($eng, $mm, $number);
+}
+
 ?>
