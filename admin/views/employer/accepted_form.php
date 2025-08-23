@@ -280,19 +280,19 @@ if (isset($_GET['correct'])) {
             </p>
 
             <p style="text-align: justify">
-                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာ
+                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာဌာနမှ ခန့်ထားပြီးကြောင်း ခွင့်ပြုချက်ရရှိပါက အလုပ်ခန့်ထားရေး ကတ်ပြား အလလခ ပုံစံ(၇) ကိုထုတ်ပေးသွားမည်ဖြစ်ပါကြောင်းအကြောင်းကြားအပ်ပါသည်
             </p>
         </div>
 
-        <div class="signature-section">
-            <img src="<?= $detail['department_confirm_sign'] ?? 'https://placehold.co/600x400/png' ?>" alt="" srcset="">
+        <div class="signature-section" style="text-align: center; float: right;">
+            <img src="<?= $detail['department_confirm_sign'] ?? '/labor_application/importants/director_sign.png' ?>" alt="" srcset="">
             <div class="sign-label">
                 ဦးစီးမှူး
             </div>
-            <p>ရုံးတာဝန်ခံ</p>
+            <p></p>
         </div>
         <div class="stamp">
-            <img src="<?= $detail['department_confirm_stamp'] ?? 'https://placehold.co/600x400/png' ?>" alt=""
+            <img src="<?= $detail['department_confirm_stamp'] ?? '/labor_application/importants/stamp_.png' ?>" alt=""
                 srcset="">
         </div>
     </div>

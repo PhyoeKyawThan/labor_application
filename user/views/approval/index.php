@@ -17,12 +17,13 @@ $reqModel = new EmployeeReqForm();
 $detail = $reqModel->readDetails($form_id);
 $occupation = json_decode($detail['occupation'], true)[0];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($reqModel->saveConfirmDataFromEmployer($form_id, 'Confirmed', $_POST['sign'], $_POST['stamp'])) {
+    if ($reqModel->saveConfirmDataFromEmployer($form_id, 'Confirmed')) {
         echo "<script>window.close()</script>";
         exit;
     }
 }
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="my">
 
 <head>
@@ -161,14 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         form {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
+            
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 600px;
-            margin-bottom: 20px;
-            display: none;
+            /* display: none; */
             flex-direction: column;
             gap: 20px;
             margin: auto;
@@ -330,34 +328,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div style="display: flex; gap: 10px; align-items: center;" class="buttons">
             <!-- ?confirm=true -->
-            <button onclick="toggleForm()">Confirm</button>
+            <form action="" method="post">
+                <input type="hidden" name="comfirm" value="true">
+                <button type="submit">ခန့်ထားပြီးဖြစ်သည်</button>
+            </form>
             <button onclick="downloadTwoPagePdf()"
                 style="background-color: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
                 View as PDF
             </button>
         </div>
     </div>
-
-    <form action="" method="post">
-        <input type="hidden" name="comfirm" value="true">
-        <label for="image-upload">တံဆိပ်ခေါင်း</label>
-        <input type="file" name="stamp_image" id="image-upload" accept="image/*">
-        <input type="hidden" name="stamp" id="base64-output">
-        <img id="preview-image" src="" alt="Image Preview" style="display:none; max-width: 200px; margin-top: 10px;">
-        <br>
-        <label for="signature">လက်မှတ်ထိုးရန်</label>
-        <label for="sign">ထိုးမြဲလက်မှတ်</label>
-        <div id="sign-pad-container">
-            <canvas id="signature" width="400" height="200" style="background-color: white-smoke;"></canvas>
-        </div>
-        <input type="hidden" name="sign" id="sign" required>
-        <div class="buttons">
-            <button type="button" onclick="clearSign()" style="background-color: var(--ssir-red)" id="">Clear</button>
-            <button type="button" onclick="saveSign(event)" style="background-color: var(--ssir-green)"
-                id="save-sign">Done</button>
-        </div>
-        <button type="submit">Submit Form</button>
-    </form>
 
     <script>
         const fileInput = document.getElementById('image-upload');

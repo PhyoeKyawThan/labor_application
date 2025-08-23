@@ -52,6 +52,16 @@ class EmployeeReqForm extends Connection
         return $stmt->get_result()->fetch_assoc();
     }
 
+    public function readDetailsByUserId($form_id, $uid)
+    {
+        $stmt = parent::$connection->prepare("
+        SELECT r.*, da.toDeliver, da.outletter_no, da.approval_req_date, u.id as uid FROM $this->details_table as r JOIN users as u ON u.id = r.user_id
+        LEFT JOIN department_approval as da ON da.employee_req_id = r.id WHERE r.id = ? AND r.user_id = ?");
+        $stmt->bind_param("ii", $form_id, $uid);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
     public function readEmployeeNumbers($form_id)
     {
         $form_id = (int) $form_id;
@@ -145,9 +155,9 @@ class EmployeeReqForm extends Connection
         ;
     }
 
-    public function saveConfirmDataFromEmployer($form_id, $status, $sign, $stamp){
-        $query = parent::$connection->prepare("UPDATE employee_req_form SET status = ?, department_confirm_sign = ?, department_confirm_stamp = ? WHERE id = ?");
-        $query->bind_param("sssi", $status, $sign, $stamp, $form_id);
+    public function saveConfirmDataFromEmployer($form_id, $status){
+        $query = parent::$connection->prepare("UPDATE employee_req_form SET status = ? WHERE id = ?");
+        $query->bind_param("si", $status, $form_id);
         return $query->execute();
     }
 
