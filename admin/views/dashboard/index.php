@@ -93,8 +93,7 @@ $conn->close();
     }
 </style>
 
-
-<h1>📊 Dashboard Overview</h1>
+<h1 style="background-color:#0056b3; padding: 10px; color: white; border-radius: 8px;">📊 Dashboard Overview</h1>
 <div class="dashboard">
     <div class="chart-card">
         <h3>Applications Status</h3>

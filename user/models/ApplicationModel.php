@@ -31,7 +31,10 @@ class ApplicationModel extends Connection
 
     private function check_status($serial_number)
     {
-        $checkstmt = parent::$connection->query("SELECT sn.*,rq.status FROM serial_numbers as sn JOIN employee_req_form as rq ON rq.id = sn.form_id WHERE serial_number = '$serial_number'");
+        $checkstmt = parent::$connection->query("SELECT sn.*,rq.status 
+        FROM serial_numbers as sn 
+        JOIN employee_req_form as rq ON rq.id = sn.form_id 
+        WHERE sn.serial_number = '$serial_number'");
         $serial_status = $checkstmt->fetch_assoc();
         if ($serial_status) {
             if ($serial_status['status'] == 'Finished' || $serial_status['status'] == 'Pending') {

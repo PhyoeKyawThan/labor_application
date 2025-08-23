@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require __DIR__.'/../commons/Connection.php';
 define('BASE_VIEW_PATH', __DIR__ . '/views');
 define("BASE_URL", '/labor_application/admin');

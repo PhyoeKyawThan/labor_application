@@ -124,14 +124,17 @@ if (isset($_GET['stus'])) {
         font-size: 14px;
     }
 
-    thead {
-        background-color: #f1f1f1;
+     thead{
+        background-color: #0056b3 !important;
     }
 
     thead th {
+        /* background-color: #f8f9fa; */
         text-align: left;
-        padding: 12px;
-        border-bottom: 2px solid #ddd;
+        padding: 15px;
+        font-weight: 600;
+        color: #ffffffff;
+        border-bottom: 2px solid #e9ecef;
     }
 
     tbody td {

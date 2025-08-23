@@ -139,12 +139,16 @@ if(isset($_GET['s'])){
         border-spacing: 0;
     }
 
+     thead{
+        background-color: #0056b3 !important;
+    }
+
     thead th {
-        background-color: #f8f9fa;
+        /* background-color: #f8f9fa; */
         text-align: left;
-        padding: 12px 15px;
+        padding: 15px;
         font-weight: 600;
-        color: #555;
+        color: #ffffffff;
         border-bottom: 2px solid #e9ecef;
     }
 

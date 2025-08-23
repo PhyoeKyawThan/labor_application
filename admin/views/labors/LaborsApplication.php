@@ -14,9 +14,12 @@ class LaborsApplication extends Connection
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function deleteApplication($id){
+    public function deleteApplication($id = 0){
+        if($id > 0){
+            $this->id = $id;
+        }
         $stmt = parent::$connection->prepare("DELETE FROM $this->table_name WHERE id = ?");
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $this->id);
         return $stmt->execute();
     }
 

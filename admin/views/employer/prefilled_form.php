@@ -7,10 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
         $department = $_GET['department'];
         $date = $_GET['date'];
         $position = $_GET['position'];
+        $outletter_no = $_GET['outletter_no'];
         $reqModel->insertDepartmentApproval([
             $to,
             $department,
             $date,
+            $outletter_no,
             (int) $_GET['fid']
         ]);
         $detail = $reqModel->readDetails($_GET['fid']);
@@ -20,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
 }
 
 ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nicEdit/1.0.0/nicEdit.js"></script>
 <div id="prefill-accepted-form">
     <a href="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?vr=employer&fid=' . $_GET['fid'] ?>">
         <i class="fas fa-arrow-left"></i>
@@ -33,13 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
         <input type="hidden" name="pa" value="true">
         <div>
             <label for="to-line-3">သို့:</label>
-            <textarea type="text" name="to" id="to-3" placeholder="မည်သူ့ထံသို့"><?= $detail['toDeliver'] ?></textarea>
+            <textarea type="text" name="to" id="to-3" rows="3" placeholder="မည်သူ့ထံသို့"><?= $detail['toDeliver'] ?></textarea>
         </div>
 
 
         <div>
             <label for="department">အမည်:</label>
             <input type="text" name="department" id="department" value="<?= $detail['name'] ?>" placeholder="ဌာနအမည်">
+        </div>
+
+        <div>
+            <label for="outletter-no">စာအမှတ်:</label>
+            <input type="text" name="outletter_no" id="outletter-no" value="<?= $detail['outletter_no'] ?>" placeholder="၀၀၂၀">
         </div>
 
         <div class="grid">
@@ -65,6 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['accept'])) {
         </div>
     </form>
 </div>
+<script>
+    bkLib.onDomLoaded(function () {
+        new nicEditor({ fullPanel: true }).panelInstance('to-3');
+        setInterval(() => {
+            const iframe = document.querySelector("iframe");
+            if (iframe && iframe.contentDocument?.body) {
+                iframe.style.height = (iframe.contentDocument.body.scrollHeight + 20) + 'px';
+            }
+        }, 500);
+    });
+</script>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
 

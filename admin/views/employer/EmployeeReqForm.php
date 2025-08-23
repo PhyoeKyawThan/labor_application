@@ -45,7 +45,7 @@ class EmployeeReqForm extends Connection
     public function readDetails($form_id)
     {
         $stmt = parent::$connection->prepare("
-        SELECT r.*, da.toDeliver, da.approval_req_date, u.id as uid FROM $this->details_table as r JOIN users as u ON u.id = r.user_id
+        SELECT r.*, da.toDeliver, da.outletter_no, da.approval_req_date, u.id as uid FROM $this->details_table as r JOIN users as u ON u.id = r.user_id
         LEFT JOIN department_approval as da ON da.employee_req_id = r.id WHERE r.id = ?");
         $stmt->bind_param("i", $form_id);
         $stmt->execute();
@@ -99,15 +99,17 @@ class EmployeeReqForm extends Connection
                 toDeliver, 
                 department_name, 
                 approval_req_date, 
+                outletter_no,
                 employee_req_id
-            ) VALUES (?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 toDeliver = VALUES(toDeliver),
                 department_name = VALUES(department_name),
+                outletter_no = VALUES(outletter_no),
                 approval_req_date = VALUES(approval_req_date)";
 
         $stmt = parent::$connection->prepare($sql);
-        $stmt->bind_param('sssi', ...$datas);
+        $stmt->bind_param('ssssi', ...$datas);
         return $stmt->execute();
     }
 

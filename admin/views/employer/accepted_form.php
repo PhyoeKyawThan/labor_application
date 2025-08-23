@@ -24,7 +24,7 @@
             color: #333;
         }
 
-        .header-parent{
+        .header-parent {
             display: flex;
             justify-content: end;
         }
@@ -38,11 +38,17 @@
         }
 
         .header .office-name {
-            font-weight: bold;
+            /* background-color: red; */
+            /* font-weight: bold; */
+            text-align: justify;
             font-size: 16px;
         }
 
         .header .address {
+            display: flex;
+            justify-content: space-between;
+            /* background-color: red; */
+            text-align: justify;
             margin-top: 5px;
         }
 
@@ -92,14 +98,16 @@
             width: 150px;
             height: 150px;
         }
-        .stamp{
+
+        .stamp {
             position: absolute;
             opacity: 0.5;
             top: 20px;
             /* right: 150px; */
-            
+
         }
-        .stamp img{
+
+        .stamp img {
             width: 200px;
             height: 200px;
         }
@@ -182,6 +190,7 @@
     </style>
 </head>
 <?php
+
 if (isset($_GET['correct'])) {
     if ($detail['status'] != 'Finished') {
         $status = $_GET['status'] == 'Confirmed' ? 'Finished' : 'Department Approvel';
@@ -222,23 +231,22 @@ if (isset($_GET['correct'])) {
         <div class="header-parent">
             <div class="header">
                 <div class="office-name">
-                    အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)
+                    အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန
+                </div>
+                <div class="address" style="">
+                    <div>ဟင်္သာတခရိုင်</div>
+                    <div>-</div>
+                    <div>ဟင်္သာတမြို့</div>
                 </div>
                 <div class="address">
-                    ဗဟိုရုံး
-                </div>
-                <div class="address">
-                    နေပြည်တော်
-                </div>
-                <div class="address">
-                    စာအမှတ်၊ ၈/၂/အလည-မ(အလခ)( )
+                    စာအမှတ်၊ ၈/၂/အလည-မ(အလခ)( <?= engToBurmeseNumber($detail['outletter_no']) ?> )
                 </div>
                 <div class="doc-number">
                     <span class="label">ရက်စွဲ:</span>
-                    <b><?php
+                    <?php
                     $curr = new DateTime();
                     echo formatMyanmarDate($curr->format('Y-m-d'));
-                    ?> </b>
+                    ?> 
                 </div>
             </div>
         </div>
@@ -263,7 +271,7 @@ if (isset($_GET['correct'])) {
                 </span>
             </p>
 
-            <p>
+            <p style="text-align: justify">
                 ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $department ?> ဌာနတွင်
                 လစ်လပ်‌လျှက်ရှိသော
                 <?= $position ?> ရာထူး နေရာအတွက် အလုပ်လုပ်ကိုင် သူများစာရင်း အလလခပုံစံ(၆) (၂)နှစ်စုံအား
@@ -271,7 +279,7 @@ if (isset($_GET['correct'])) {
                 ပူးတွဲပေးပို့အပ်ပါသည်။
             </p>
 
-            <p>
+            <p style="text-align: justify">
                 ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာ
             </p>
         </div>
@@ -284,7 +292,8 @@ if (isset($_GET['correct'])) {
             <p>ရုံးတာဝန်ခံ</p>
         </div>
         <div class="stamp">
-            <img src="<?= $detail['department_confirm_stamp'] ?? 'https://placehold.co/600x400/png' ?>" alt="" srcset="">
+            <img src="<?= $detail['department_confirm_stamp'] ?? 'https://placehold.co/600x400/png' ?>" alt=""
+                srcset="">
         </div>
     </div>
 

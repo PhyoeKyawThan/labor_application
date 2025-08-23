@@ -51,6 +51,6 @@ $about = $result->fetch_assoc();
 <main>
     <div id="about">
         <h1 id="about-title"><?= htmlspecialchars($about['title']) ?></h1>
-        <p><?= nl2br(htmlspecialchars($about['body'])) ?></p>
+        <p><?= $about['body'] ?></p>
     </div>
 </main>
