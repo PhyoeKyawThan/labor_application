@@ -23,7 +23,7 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
                 <!-- Front -->
                 <div id="employed-card-<?= $emp['nrc'] ?>" class="flip-card-front employed-card">
                     <div class="government-info">
-                        <span style="font-weight: bold; float: right;"><?= $emp['approved_serial'] ?></span>
+                        <span style="font-weight: bold; float: right; color: red;"><?= engToBurmeseNumber($emp['approved_serial']) ?></span>
                         <span class="country" style="position: relative; left: 18px;">ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</span>
                         <br>
                         <span>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန</span>
@@ -267,7 +267,7 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
         }
 
         .employed-card {
-            max-width: 45%;
+            max-width: 65%;
             margin: auto;
         }
 
