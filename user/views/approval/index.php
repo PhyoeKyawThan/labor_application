@@ -289,6 +289,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             align-items: center;
             margin-bottom: 20px;
         }
+        .signature-section {
+            margin-top: 50px;
+            text-align: right;
+        }
+
+        .signature-section img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .stamp {
+            position: absolute;
+            opacity: 0.5;
+            top: 20px;
+            /* right: 150px; */
+
+        }
+
+        .stamp img {
+            width: 200px;
+            height: 200px;
+        }
 
 
         @media print {
@@ -443,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </p>
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
-                <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ်၊
+                <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ် <?= $detail['outletter_no'] ?>၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>
@@ -456,16 +478,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ပူးတွဲပေးပို့အပ်ပါသည်။
             </p>
 
-            <p>
-                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာ
+            <p style="text-align: justify">
+                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာဌာနမှ ခန့်ထားပြီးကြောင်း ခွင့်ပြုချက်ရရှိပါက အလုပ်ခန့်ထားရေး ကတ်ပြား အလလခ ပုံစံ(၇) ကိုထုတ်ပေးသွားမည်ဖြစ်ပါကြောင်းအကြောင်းကြားအပ်ပါသည်
             </p>
         </div>
 
-        <div class="signature-section">
+        <div class="signature-section" style="text-align: center; float: right;">
+            <img src="<?= $detail['department_confirm_sign'] ?? '/labor_application/importants/director_sign.png' ?>" alt="" srcset="">
             <div class="sign-label">
                 ဦးစီးမှူး
             </div>
-            <p>ရုံးတာဝန်ခံ</p>
+            <p></p>
+        </div>
+        <div class="stamp">
+            <img src="<?= $detail['department_confirm_stamp'] ?? '/labor_application/importants/stamp_.png' ?>" alt=""
+                srcset="">
         </div>
     </div>
 

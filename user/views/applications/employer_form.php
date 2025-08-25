@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($employee_numbers)) {
         $model->createEmployeeNumbers($form_id, $employee_numbers);
         $_SESSION['applied'] = true;
-        echo "<script>window.location.href = '/labor_application/user/?vr=applications&vf=&".$form_id."';</script>";
+        echo "<script>window.location.href = '/labor_application/user/?vr=applications&vf=&fid=".$form_id."';</script>";
         exit;
     }
 }

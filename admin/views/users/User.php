@@ -45,9 +45,12 @@ class User extends Connection
      *
      * @return array An associative array of all users.
      */
-    public function readAll()
+    public function readAll($filter = null)
     {
         $query = parent::$connection->query("SELECT id, username, email, type, created_at FROM $this->table ORDER BY id DESC");
+        if($filter){
+            $query = parent::$connection->query("SELECT id, username, email, type, created_at FROM $this->table WHERE type = '$filter' ORDER BY id DESC");
+        }
         return $query->fetch_all(MYSQLI_ASSOC);
     }
 

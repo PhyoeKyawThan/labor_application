@@ -266,7 +266,7 @@ if (isset($_GET['correct'])) {
             </p>
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
-                <span><?= $department ?> ဌာန၏ <?= formatMyanmarDate($date) ?> ရက်စွဲပါ စာအမှတ်၊
+                <span><?= $department ?> ဌာန၏ <?= formatMyanmarDate($date) ?> ရက်စွဲပါ စာအမှတ် <?= $detail['outletter_no'] ?>၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>

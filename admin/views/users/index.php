@@ -11,7 +11,7 @@ if(isset($_GET['uid']) || isset($_GET['fid'])){
 if(isset($_GET['did'])){
     $userModel->delete((int) $_GET['did']);
 }
-$users = $userModel->readAll();
+$users = isset($_GET['filter']) ? $userModel->readAll($_GET['filter']) : $userModel->readAll();
 if(isset($_GET['s'])){
     $users = $userModel->search($_GET['s']);
 }
@@ -30,6 +30,16 @@ if(isset($_GET['s'])){
                 value="<?= isset($_GET['s']) ? htmlspecialchars($_GET['s']) : '' ?>" />
             <button type="submit">Search</button>
         </form>
+        <div class="filter-form">
+            <label for="filter"><i class="fas fa-filter"></i></label>
+            <select name="filter" id="filter" onchange="doFilter(event)">
+                <option disabled selected>
+                     Filter
+                </option>
+                <option value="employee" <?= isset($_GET['filter']) && $_GET['filter'] == 'employee' ? 'selected' : '' ?>>Employee (labors)</option>
+                <option value="employer" <?= isset($_GET['filter']) && $_GET['filter'] == 'employer' ? 'selected' : '' ?>>Employer</option>
+            </select>
+        </div>
     </div>
 
     <div class="table-container">
@@ -71,7 +81,11 @@ if(isset($_GET['s'])){
         </table>
     </div>
 </div>
-
+<script>
+    function doFilter(e){
+        window.location.href = `<?= $_SERVER['REQUEST_URI'] ?>&filter=${e.target.value}`;
+    }
+</script>
 <style>
     /* General body and container styles */
     body {
@@ -95,7 +109,8 @@ if(isset($_GET['s'])){
         gap: 10px;
     }
 
-    .search-form input[type="text"] {
+    .search-form input[type="text"],
+    .filter-form select {
         padding: 10px 15px;
         border: 1px solid #ddd;
         border-radius: 8px;
