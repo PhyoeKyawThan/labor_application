@@ -23,7 +23,8 @@ $date = getMyanmarDateComponents($detail['submitted_at']);
                 <!-- Front -->
                 <div id="employed-card-<?= $emp['nrc'] ?>" class="flip-card-front employed-card">
                     <div class="government-info">
-                        <span class="country">ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</span>
+                        <span style="font-weight: bold; float: right;"><?= $emp['approved_serial'] ?></span>
+                        <span class="country" style="position: relative; left: 18px;">ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</span>
                         <br>
                         <span>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန</span>
                         <span>အလုပ်အကိုင်နှင့်အလုပ်သမားရှာဖွေရေးရုံး</span>

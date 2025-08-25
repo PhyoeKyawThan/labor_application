@@ -5,15 +5,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
 $serial_number = $_GET['sn'] ?? die("Sorry we need specific Serial Number");
-if (!isset($_SESSION['user_id'])) {
-    die("You are not logged in");
-}
 require_once __DIR__ . '/../../../commons/Connection.php';
 
 $connection = new Connection();
 $connection = $connection::$connection;
 
-$lprepare = $connection->prepare("SELECT * FROM applications WHERE serial_number = ? AND user_id = ? AND status = 'Approved'");
+$lprepare = $connection->prepare("SELECT * FROM applications WHERE serial_number = ? AND user_id = ?");
 $lprepare->bind_param('si', $serial_number, $_SESSION['user_id']);
 $lprepare->execute();
 $lprepare = $lprepare->get_result();
@@ -22,7 +19,7 @@ $laborer = $lprepare->fetch_assoc();
 
 <div class="print-button-container">
     <button onclick="downloadCardAsPdf()">Download Card</button>
-    <button onclick="window.print()">Print Card</button>
+    <!-- <button onclick="window.print()">Print Card</button> -->
 </div>
 
 <div class="card-container">
@@ -65,6 +62,9 @@ $laborer = $lprepare->fetch_assoc();
             </div>
 
             <div class="signature-section">
+                <div class="f-box">
+                    <span>လက်ဝဲလက်မ</span>
+                </div>
                 <div class="signature-box">
                     <img src="/labor_application/importants/director_sign.png" alt="Director Signature"
                         class="signature-img">
@@ -87,40 +87,69 @@ $laborer = $lprepare->fetch_assoc();
             </p>
         </div>
     </div>
+    <hr>
+    <div class="card-back">
+        <div>
+            <p>အလုပ်သမားမှတ်ပုံတင်ကတ်ပြားသက်တမ်းတိုးမှုဇယား</p>
+            <p>အလုပ်သမားမှတ်ပုံတင်ကတ်ပြားသက်တမ်းတိုးမှုဇယား</p>
+        </div>
+        <div>
+            <?php
+            for ($i = 0; $i < 2; $i++):
+                ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>စဉ်</th>
+                            <th>သက်တမ်းတိုးသည့်ရက်စွဲ</th>
+                            <th>ရုံးတာဝန်ခံလက်မှတ်</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        for ($j = 0; $j < 7; $j++):
+                            ?>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        <?php endfor; ?>
+                    </tbody>
+                </table>
+            <?php endfor; ?>
+        </div>
+        <img src="/labor_application/importants/stamp_.png" alt="Stamp" class="stamp">
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-     function downloadCardAsPdf() {
-        const target = document.querySelector(".labor-card-content");
-        
-        html2canvas(target, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            
-            const pdf = new jsPDF('p', 'mm', 'a4'); 
-            
-            const imgWidth = 190; 
-            const pageHeight = 297;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
 
-            let position = 10; 
+    async function downloadCardAsPdf() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
 
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        const imgWidth = 190;
+        let position = 10;
+        const front = document.querySelector(".labor-card-content");
+        const frontCanvas = await html2canvas(front, { scale: 2 });
+        const frontImgData = frontCanvas.toDataURL('image/png');
+        const frontImgHeight = frontCanvas.height * imgWidth / frontCanvas.width;
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight + 10;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-            
-            pdf.save("labor_card_<?= $laborer['serial_number'] ?>.pdf");
-        });
-    
-}
+        pdf.addImage(frontImgData, 'PNG', 10, position, imgWidth, frontImgHeight);
+        const back = document.querySelector(".card-back");
+        const backCanvas = await html2canvas(back, { scale: 2 });
+        const backImgData = backCanvas.toDataURL('image/png');
+        const backImgHeight = backCanvas.height * imgWidth / backCanvas.width;
+
+        pdf.addPage();
+        pdf.addImage(backImgData, 'PNG', 10, position, imgWidth, backImgHeight);
+
+        pdf.save("labor_card_<?= $laborer['serial_number'] ?>.pdf");
+    }
+
+
 </script>
 <style>
     body {
@@ -262,12 +291,58 @@ $laborer = $lprepare->fetch_assoc();
         margin-bottom: 15px;
     }
 
+    .f-box {
+        position: relative;
+        top: -50px;
+        left: -100px;
+        height: 100px;
+        width: 100px;
+        border: 2px solid black;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+
+    .f-box span {
+        display: block;
+        text-align: center;
+    }
+
+    .card-back table {
+        border-collapse: collapse;
+    }
+
+    .card-back div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .card-back th,
+    td {
+        border: 2px solid black;
+        padding: 10px;
+    }
+
+    .card-back td {
+        padding: 20px 0;
+    }
+
+    .card-back .stamp {
+        position: absolute;
+        top: 800px;
+        left: 550px;
+        width: 200px;
+
+    }
+
     @media print {
         body {
             margin: 0;
             padding: 40px;
             background-color: white;
-            
+
         }
 
         .print-button-container {
@@ -292,6 +367,16 @@ $laborer = $lprepare->fetch_assoc();
             opacity: 0.7;
             top: -400px;
             left: 0px;
+        }
+
+        .card-back .stamp {
+            position: absolute;
+            top: 800px;
+            left: 550px;
+            width: 200px;
+            height: auto;
+            opacity: 0.7;
+
         }
     }
 </style>

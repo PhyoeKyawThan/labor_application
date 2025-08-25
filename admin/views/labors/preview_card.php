@@ -19,7 +19,7 @@ $laborer = $lprepare->fetch_assoc();
 
 <div class="print-button-container">
     <button onclick="downloadCardAsPdf()">Download Card</button>
-    <button onclick="window.print()">Print Card</button>
+    <!-- <button onclick="window.print()">Print Card</button> -->
 </div>
 
 <div class="card-container">
@@ -294,7 +294,7 @@ $laborer = $lprepare->fetch_assoc();
     .f-box {
         position: relative;
         top: -50px;
-        left: -20px;
+        left: -100px;
         height: 100px;
         width: 100px;
         border: 2px solid black;

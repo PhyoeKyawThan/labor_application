@@ -81,7 +81,8 @@ class EmployeeReqForm extends Connection
         $employee_numbers = $this->readEmployeeNumbers($form_id);
         $emplyoees = [];
         foreach ($employee_numbers as $e) {
-            $stmt = parent::$connection->query("SELECT * FROM applications WHERE serial_number = '$e'");
+            $stmt = parent::$connection->query("SELECT app.*, ser.approved_serial FROM
+            applications as app JOIN serial_numbers as ser ON ser.serial_number = app.serial_number WHERE app.serial_number = '$e'");
             $emplyoees[] = $stmt->fetch_assoc();
         }
 
@@ -151,14 +152,47 @@ class EmployeeReqForm extends Connection
 
     public function changeStatus($form_id, $status)
     {
+        if ($status == 'Finished') {
+            $stmt = parent::$connection->query("SELECT * FROM serial_numbers WHERE form_id = $form_id");
+            $serials = $stmt->fetch_all(MYSQLI_ASSOC);
+            if($serials){
+                foreach($serials as $s){
+                    $serial = $this->serial_number_generator();
+                    parent::$connection->query("UPDATE serial_numbers SET approved_serial = '$serial' WHERE id = ".$s['id']."");
+                }
+            }
+        }
         return parent::$connection->query("UPDATE employee_req_form SET status = '$status' WHERE id = $form_id");
         ;
     }
 
-    public function saveConfirmDataFromEmployer($form_id, $status){
+    public function saveConfirmDataFromEmployer($form_id, $status)
+    {
         $query = parent::$connection->prepare("UPDATE employee_req_form SET status = ? WHERE id = ?");
         $query->bind_param("si", $status, $form_id);
         return $query->execute();
+    }
+
+    private function serial_number_generator()
+    {
+        $query = mysqli_query(parent::$connection, "SELECT * FROM serial_numbers ORDER BY id DESC LIMIT 1");
+        $latest_application = mysqli_fetch_assoc($query);
+        $current_year = (new DateTime())->format('Y');
+
+        if (isset($latest_application['id'])) {
+            $latest_application_date = new DateTime($latest_application['created_at']);
+            $latest_application_yr = $latest_application_date->format('Y');
+
+            $latest_app_serial_num = (int) ($latest_application['serial_number'] ?? 0);
+
+            if ($current_year != $latest_application_yr) {
+                return str_pad('1', 6, '0', STR_PAD_LEFT);
+            } else {
+                $next_serial = $latest_app_serial_num + 1;
+                return str_pad((string) $next_serial, 6, '0', STR_PAD_LEFT);
+            }
+        }
+        return '000001';
     }
 
     public function readAll()
