@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap'); */
 
         .a4-container {
             margin: 20px auto;
@@ -48,6 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             position: relative;
             font-size: 14px;
             color: #333;
+        }
+
+        h2,
+        h3,
+        h4 {
+            text-align: center;
+            line-height: 1;
         }
 
         .header {
@@ -162,11 +169,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         form {
-            
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+            /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
             width: 100%;
-            max-width: 600px;
-            /* display: none; */
+            /* max-width: 600px; */
+            display: flex;
+            flex-direction: row;
             flex-direction: column;
             gap: 20px;
             margin: auto;
@@ -289,6 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             align-items: center;
             margin-bottom: 20px;
         }
+
         .signature-section {
             margin-top: 50px;
             text-align: right;
@@ -338,26 +347,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body>
 
-    <div
-        style="display: flex; align-items: center; justify-content: space-between; background-color: #f3f4f6; padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 1rem;">
-
+    <div style="display: flex;
+         align-items: center;
+          justify-content: space-between; 
+          background-color: #f3f4f6; 
+          padding: 1rem 1.5rem; 
+          border-radius: 10px; 
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+          margin-bottom: 1rem;">
         <a onclick="window.close()"
             style="text-decoration: none; color: #3b82f6; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer;">
             <i class="fas fa-arrow-left"></i> Back
         </a>
-
-        <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">Confirmation</h2>
-
+        <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">အချက်အလက်များအား အတည်ပြုရန်</h2>
         <div style="display: flex; gap: 10px; align-items: center;" class="buttons">
-            <!-- ?confirm=true -->
             <form action="" method="post">
                 <input type="hidden" name="comfirm" value="true">
-                <button type="submit">ခန့်ထားပြီးဖြစ်သည်</button>
-            </form>
-            <button onclick="downloadTwoPagePdf()"
+                <button type="submit">မှန်ကန်ပါသည်</button>
+                <button onclick="downloadTwoPagePdf()"
                 style="background-color: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
                 View as PDF
             </button>
+            </form>
         </div>
     </div>
 
@@ -465,7 +476,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </p>
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
-                <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ် <?= $detail['outletter_no'] ?>၊
+                <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ်
+                    <?= $detail['outletter_no'] ?>၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>
@@ -479,12 +491,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </p>
 
             <p style="text-align: justify">
-                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာဌာနမှ ခန့်ထားပြီးကြောင်း ခွင့်ပြုချက်ရရှိပါက အလုပ်ခန့်ထားရေး ကတ်ပြား အလလခ ပုံစံ(၇) ကိုထုတ်ပေးသွားမည်ဖြစ်ပါကြောင်းအကြောင်းကြားအပ်ပါသည်
+                ၂။ သို့ဖြစ်ပါ၍ သက်ဆိုင်ရာဌာနမှ ခန့်ထားပြီးကြောင်း ခွင့်ပြုချက်ရရှိပါက အလုပ်ခန့်ထားရေး ကတ်ပြား အလလခ
+                ပုံစံ(၇) ကိုထုတ်ပေးသွားမည်ဖြစ်ပါကြောင်းအကြောင်းကြားအပ်ပါသည်
             </p>
         </div>
 
         <div class="signature-section" style="text-align: center; float: right;">
-            <img src="<?= $detail['department_confirm_sign'] ?? '/labor_application/importants/director_sign.png' ?>" alt="" srcset="">
+            <img src="<?= $detail['department_confirm_sign'] ?? '/labor_application/importants/director_sign.png' ?>"
+                alt="" srcset="">
             <div class="sign-label">
                 ဦးစီးမှူး
             </div>
@@ -502,15 +516,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $employees = $reqModel->readEmployeeDetails($form_id);
     ?>
     <div class="a4-container employees">
-        <span><b>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)</b></span>
-        <br>
-        <span><b>အလလခ ပုံစံ (၆)</b></span>
-        <br>
-        <span style="font-size: 19px;"><b>အလုပ်သမားအင်အားစာရင်း</b></span>
-        <br>
-        <span>
-            အလုပ်သမားအင်အားတောင်းခံသည့်ဌာန: <?= $detail['name'] ?>
-        </span>
+        <h3>ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</h3>
+        <h4>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန</h4>
+        <h2>အလုပ်အကိုင်နှင့် အလုပ်သမားရှာဖွေရေးရုံး</h2>
+        <h4>အလုပ်သမားပေးပို့သည့်ပုံစံ</h4>
         <table>
             <thead>
                 <tr>

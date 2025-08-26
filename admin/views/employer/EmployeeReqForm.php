@@ -6,6 +6,7 @@ class EmployeeReqForm extends Connection
     private $details_table = "employee_req_form";
     private $numbers_table = "serial_numbers";
 
+    private $latest_app_id = null;
     public function createDetails($data)
     {
         $stmt = parent::$connection->prepare("INSERT INTO $this->details_table(
@@ -173,7 +174,7 @@ class EmployeeReqForm extends Connection
         return $query->execute();
     }
 
-    private function serial_number_generator()
+    public function serial_number_generator()
     {
         $query = mysqli_query(parent::$connection, "SELECT * FROM serial_numbers ORDER BY id DESC LIMIT 1");
         $latest_application = mysqli_fetch_assoc($query);
@@ -183,12 +184,18 @@ class EmployeeReqForm extends Connection
             $latest_application_date = new DateTime($latest_application['created_at']);
             $latest_application_yr = $latest_application_date->format('Y');
 
-            $latest_app_serial_num = (int) ($latest_application['serial_number'] ?? 0);
+            $latest_app_serial_num = (int) ($latest_application['approved_serial'] ?? 0);
 
             if ($current_year != $latest_application_yr) {
                 return str_pad('1', 6, '0', STR_PAD_LEFT);
             } else {
-                $next_serial = $latest_app_serial_num + 1;
+                if($this->latest_app_id){
+                    $next_serial = $this->latest_app_id + 1;
+                    $this->latest_app_id = $next_serial;
+                }else{
+                    $next_serial = $latest_app_serial_num + 1;
+                    $this->latest_app_id = $next_serial;
+                }
                 return str_pad((string) $next_serial, 6, '0', STR_PAD_LEFT);
             }
         }
@@ -209,3 +216,6 @@ class EmployeeReqForm extends Connection
         return $stmt->execute();
     }
 }
+
+// $m = new EmployeeReqForm();
+// print($m->changeStatus(12, 'Finished'));

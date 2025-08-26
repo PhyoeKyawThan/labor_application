@@ -106,6 +106,12 @@
             /* right: 150px; */
 
         }
+        h2,
+        h3,
+        h4 {
+            text-align: center;
+            line-height: 1;
+        }
 
         .stamp img {
             width: 200px;
@@ -303,15 +309,10 @@ if (isset($_GET['correct'])) {
     $employees = $reqModel->readEmployeeDetails($_GET['fid']);
     ?>
     <div class="a4-container employees">
-        <span><b>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန(ရုံးချုပ်)</b></span>
-        <br>
-        <span><b>အလလခ ပုံစံ (၆)</b></span>
-        <br>
-        <span style="font-size: 19px;"><b>အလုပ်သမားအင်အားစာရင်း</b></span>
-        <br>
-        <span>
-            အလုပ်သမားအင်အားတောင်းခံသည့်ဌာန: <?= $department ?>
-        </span>
+        <h3>ပြည်ထောင်စုသမ္မတမြန်မာနိုင်ငံတော်</h3>
+        <h4>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန</h4>
+        <h2>အလုပ်အကိုင်နှင့် အလုပ်သမားရှာဖွေရေးရုံး</h2>
+        <h4>အလုပ်သမားပေးပို့သည့်ပုံစံ</h4>
         <table>
             <thead>
                 <tr>

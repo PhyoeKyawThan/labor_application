@@ -163,7 +163,9 @@
             <?php else: ?>
                 <p class="status-message">Your resubmitted application is currently under review. We will notify you of the outcome
                     as soon as possible.</p>
-            <?php endif; endif; endif; ?>
+            <?php endif; ?>
+            <p><a href="/labor_application/user/?vr=account&a=">View Application</a></p>
+        <?php endif; endif; ?>
     <hr style="margin: 20px auto;">
     <h3>Requirements</h3>
     <p>
