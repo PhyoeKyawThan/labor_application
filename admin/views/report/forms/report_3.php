@@ -5,7 +5,7 @@ $labors = $report->getLaborsWithEdu();
 
 ?>
 
-<div id="print-container">
+<div class="print-container pdf-page">
     <h3>ရုံးတွင် 
         <?= engToBurmeseNumber($_POST['year']) ?> ခုနှစ်၊ 
         <?= engToBurmeseNumber($_POST['month']) ?> လတွင် အသစ်မှတ်ပုံတင်သူများကို ပညာအရည်အချင်းဖြင့်ပြသည့်ဇယား</h3>

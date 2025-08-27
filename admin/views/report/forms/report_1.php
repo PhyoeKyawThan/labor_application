@@ -31,7 +31,7 @@ foreach ($labors as $l) {
 
 ?>
 
-<div id="print-container">
+<div class="print-container pdf-page">
     <h3>အလုပ်သမား ညွှန်ကြားရေးဦးစီးဌာန (မြို့နယ်ရုံး) ဟင်္သာတမြို့၏ (<?= $date ?>)လ အတွက် အလုပ်ရရှိသူများ၏ အသက်အပိုင်းအခြားအလိုက်
         ဖော်ပြသည့်စာရင်း</h3>
     <table>

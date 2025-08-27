@@ -5,7 +5,7 @@ $departments = $report->getDepartmentPositionEmployedLabors();
 
 ?>
 
-<div id="print-container">
+<div class="print-container pdf-page">
     <h3>အလုပ်သမားညွှန်ကြားရေးဦးစီးဌာန (မြို့နယ်ရုံး) ဟင်္သာတမြို့၏  <?= engToBurmeseNumber($_POST['year']) ?> ခုနှစ်၊ <?= engToBurmeseNumber($_POST['month']) ?> လအတွက် ဌာနအလိုက် အလုပ်ရရှိသူများစာရင်း</h3>
     <table>
         <thead>

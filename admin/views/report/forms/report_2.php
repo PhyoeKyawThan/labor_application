@@ -31,7 +31,7 @@ foreach ($labors as $l) {
 
 ?>
 
-<div id="print-container">
+<div class="print-container pdf-page">
     <h3>အလုပ်အကိုင်ရှာဖွေရေးနှင့် အလုပ်သမားခန့်ထားရေးရုံးတွင်
         <?= engToBurmeseNumber($_POST['year']) ?> ခုနှစ်၊
         <?= engToBurmeseNumber($_POST['month']) ?> လတွင် အသစ်မှတ်ပုံတင်သူများကို အသက်အားဖြင့် ပြသည့်စာရင်း
