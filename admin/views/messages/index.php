@@ -19,7 +19,7 @@ if (isset($_GET["del"])) {
     $del_query = $conn->prepare($del_query);
     $del_query->bind_param('i', $_GET['del']);
     $del_query->execute();
-    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
+    echo "<script>window.location.href = '?vr=messages&msg=Deleted'</script>";
     exit();
 }
 
@@ -104,7 +104,7 @@ $conn->close();
                             <td class="table-actions">
                                 <button class="btn view-btn"
                                     onclick='showReplyModal(<?= json_encode($message) ?>)'>View</button>
-                                <a href="?del=<?= $message['id'] ?>" class="btn delete-btn"
+                                <a href="?vr=messages&del=<?= $message['id'] ?>" class="btn delete-btn"
                                     onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
                             </td>
                         </tr>

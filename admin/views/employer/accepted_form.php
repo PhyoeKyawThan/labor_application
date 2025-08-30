@@ -272,13 +272,13 @@ if (isset($_GET['correct'])) {
             </p>
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
-                <span><?= $department ?> ဌာန၏ <?= formatMyanmarDate($date) ?> ရက်စွဲပါ စာအမှတ် <?= $detail['outletter_no'] ?>၊
+                <span><?= $department ?> ဌာန၏ <?= formatMyanmarDate($date) ?> ရက်စွဲပါ စာအမှတ် <?= $detail['letter_no'] ?>၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>
 
             <p style="text-align: justify">
-                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $department ?> ဌာနတွင်
+                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $detail['department_address'] ?> ဌာနတွင်
                 လစ်လပ်‌လျှက်ရှိသော
                 <?= $position ?> ရာထူး နေရာအတွက် အလုပ်လုပ်ကိုင် သူများစာရင်း အလလခပုံစံ(၆) (၂)နှစ်စုံအား
                 ရွေးချယ်နိုင်ပါရန်

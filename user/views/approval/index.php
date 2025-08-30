@@ -477,13 +477,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>
                 <span class="to-label">ရည်ညွှန်းချက်။&nbsp;&nbsp;</span>
                 <span><?= $detail['name'] ?> ဌာန၏ <?= formatMyanmarDate($detail['submitted_at']) ?> ရက်စွဲပါ စာအမှတ်
-                    <?= $detail['outletter_no'] ?>၊
+                    <?= $detail['letter_no'] ?>၊
                     ပေးပို့သည့်အမှာစာ
                 </span>
             </p>
 
             <p>
-                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $detail['name'] ?> ဌာနတွင်
+                ၁။ အထက်ပါကိစ္စနှင့်ပတ်သက်၍ရည်ညွှန်းပါစာဖြင့်အကြောင်းကြားချက်အရ <?= $detail['department_address'] ?> ဌာနတွင်
                 လစ်လပ်‌လျှက်ရှိသော
                 <?= $occupation['occupation'] ?> ရာထူး နေရာအတွက် အလုပ်လုပ်ကိုင် သူများစာရင်း အလလခပုံစံ(၆) (၂)နှစ်စုံအား
                 ရွေးချယ်နိုင်ပါရန်

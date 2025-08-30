@@ -19,11 +19,13 @@ class EmployeeReqFormModel extends Connection
             report_receiver_position,
             report_receiver_address,
             report_receiver_time,
+            letter_no,
+            signature,
             user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $serial_number = $this->serial_number_generator();
         $stmt->bind_param(
-            "ssssssssssi",
+            "ssssssssssssi",
             $data['name'],
             $serial_number,
             $data['position'],
@@ -34,6 +36,8 @@ class EmployeeReqFormModel extends Connection
             $data['report_receiver_position'],
             $data['report_receiver_address'],
             $data['report_receiver_time'],
+            $data['letter_no'],
+            $data['signature'],
             $data['user_id']
         );
 

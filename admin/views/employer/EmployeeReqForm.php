@@ -156,10 +156,14 @@ class EmployeeReqForm extends Connection
         if ($status == 'Finished') {
             $stmt = parent::$connection->query("SELECT * FROM serial_numbers WHERE form_id = $form_id");
             $serials = $stmt->fetch_all(MYSQLI_ASSOC);
-            if($serials){
-                foreach($serials as $s){
+            if ($serials) {
+                foreach ($serials as $s) {
                     $serial = $this->serial_number_generator();
-                    parent::$connection->query("UPDATE serial_numbers SET approved_serial = '$serial' WHERE id = ".$s['id']."");
+                    parent::$connection->query("
+            UPDATE serial_numbers 
+            SET approved_serial = '$serial' 
+            WHERE id = {$s['id']} AND approved_serial IS NULL
+        ");
                 }
             }
         }
@@ -189,10 +193,10 @@ class EmployeeReqForm extends Connection
             if ($current_year != $latest_application_yr) {
                 return str_pad('1', 6, '0', STR_PAD_LEFT);
             } else {
-                if($this->latest_app_id){
+                if ($this->latest_app_id) {
                     $next_serial = $this->latest_app_id + 1;
                     $this->latest_app_id = $next_serial;
-                }else{
+                } else {
                     $next_serial = $latest_app_serial_num + 1;
                     $this->latest_app_id = $next_serial;
                 }

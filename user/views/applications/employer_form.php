@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'report_receiver_position' => trim($_POST['report_receiver_position']),
         'report_receiver_address' => trim($_POST['report_receiver_address']),
         'report_receiver_time' => trim($_POST['report_receiver_time']),
+        'letter_no' => trim($_POST['letter_no']),
+        'signature' => $_POST['signature'],
         'user_id' => $_SESSION['user_id']
     ];
 
@@ -25,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($employee_numbers)) {
         $model->createEmployeeNumbers($form_id, $employee_numbers);
         $_SESSION['applied'] = true;
-        echo "<script>window.location.href = '/labor_application/user/?vr=applications&vf=&fid=".$form_id."';</script>";
+        echo "<script>window.location.href = '/labor_application/user/?vr=applications&vf=&fid=" . $form_id . "';</script>";
         exit;
     }
 }
@@ -128,6 +130,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="letter_no">Letter No.</label>
+            <input type="text" name="letter_no" id="letter_no" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="signature">Signature</label>
+            <canvas id="signature" width="400" height="200"
+                style="border:1px solid #d1d5db; border-radius:8px;"></canvas>
+
+            <!-- Hidden input to store signature data -->
+            <input type="hidden" name="signature" id="sign">
+
+            <div class="signature-actions" style="margin-top:10px; display:flex; gap:10px;">
+                <button type="button" onclick="clearSign()" class="add-button">Clear</button>
+                <button type="button" onclick="saveSign(event)" id="save-sign" class="submit-button">Done</button>
+            </div>
+        </div>
+    </div>
+
     <!-- <button type="button" onclick="addOccupiedWork()" class="add-button">Add Occupied Work</button> -->
     <div id="employee-container">
         <div class="form-group" id="employee-group-0">
@@ -271,6 +295,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-top: 0.25rem;
     }
 
+    #signature{
+        margin: auto;
+    }
+
     .validation-msg.valid {
         color: #10b981;
         /* Green color for success */
@@ -306,13 +334,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 
-    /* Responsive adjustments */
     @media (min-width: 768px) {
         .button-group {
             flex-direction: row;
         }
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
     let employeeCount = 1;
     const form = document.querySelector('.modern-form');
@@ -497,6 +525,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             element.remove();
         }
     }
+
+    const canvas = document.getElementById('signature');
+    const signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+    });
+
+    function clearSign() {
+        signaturePad.clear();
+        const save_btn = document.getElementById('save-sign');
+        save_btn.innerText = "Done";
+        save_btn.disabled = false;
+    }
+
+    function saveSign(e) {
+        if (!signaturePad.isEmpty()) {
+            const dataURL = signaturePad.toDataURL("image/png");
+            document.getElementById('sign').value = dataURL;
+            e.target.innerText = "Saved";
+            e.target.disabled = true;
+        } else {
+            alert("Please draw your signature first.");
+        }
+    }
+
 
 
 </script>

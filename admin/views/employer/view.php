@@ -384,12 +384,12 @@ if (isset($_GET['pf'])) {
             </tbody>
         </table>
 
-        <div>စာအမှတ် <?= $detail['outletter_no'] ?? '' ?></div>
+        <div>စာအမှတ် <?= $detail['letter_no'] ?? '' ?></div>
         <div><?= $formatted_date ?></div>
 
         <div id="signature">
             <div style="text-align: center">
-                <img src="/labor_application/importants/director_sign.png" alt="Sign" height="80">
+                <img src="<?= $detail['signature'] ?>" alt="Sign" height="80">
                 <br>လက်မှတ်<br>ရာထူးတံဆိပ်
             </div>
         </div>
